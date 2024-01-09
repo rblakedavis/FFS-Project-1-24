@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 8220cf74582e6df4db43d508a02f7bab
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 32
+  forceTextureCase: 3
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - FFS_24Font
+  fallbackFontReferences: []
+  customCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?/:'\"-.,\u2026;#+()%~="
+  fontRenderingMode: 2
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

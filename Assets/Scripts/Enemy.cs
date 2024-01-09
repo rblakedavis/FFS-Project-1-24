@@ -1,27 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+[CreateAssetMenu(fileName = "Enemy", menuName = "ScriptableObjects/Enemy", order = 1)]
+public class Enemy : ScriptableObject
 {
-    public float damage;
-    public float HP;
-    static bool playerTurn;
-    public Player player;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (playerTurn == false) {
-            Attack(player, damage);
-        }
-    }
-    void Attack(Player player, float damage){
-        player.HP -= damage;
-    }
+    public string enemyName;
+
+    public float damage;
+    public float health;
+    public float curHealth;
+    public Sprite sprite;
+
+    public float expWorth;
+
+    public float attacksPerSecond;
 }

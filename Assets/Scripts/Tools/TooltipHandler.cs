@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class TooltipHandler : MonoBehaviour
 {
@@ -11,33 +12,50 @@ public class TooltipHandler : MonoBehaviour
     private string bossTooltip;
     public float lingerTime = 1f;
     private Coroutine coroutine;
+    private GameData gameData;
 
-    public void OnMouseEnter()
+    
+
+    private void Start()
     {
+            gameData = GameManager.Instance.gameData;
+    }
+
+public void OnMouseEnter()
+    {
+        
         string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip };
-        if (!excludedTooltips.Contains(Data.subWindowText))        
+        if (!excludedTooltips.Contains(gameData.subWindowText))        
         {
-            tempString = Data.subWindowText;
+            tempString = gameData.subWindowText;
         }
         switch(this.name)
         {
             case "GrindBtn":
+
                 break;
+
             case "BossBtn":
+
                 break;
+
             case "ShopBtn":
-                shopTooltip = "Current Gold = " + Data.goldCur;
-                if (Data.subWindowText != shopTooltip)
+
+                shopTooltip = "Current Gold = " + gameData.goldCur;
+                if (gameData.subWindowText != shopTooltip)
                 {
-                    tempString = Data.subWindowText;
+                    tempString = gameData.subWindowText;
                 }
-                Data.subWindowText = shopTooltip;
+                gameData.subWindowText = shopTooltip;
                 if (coroutine != null )
                 {
                     StopCoroutine(coroutine);
                 }
+
                 break;
+
             case "LootBtn":
+
                 break;
         }
     }
@@ -50,7 +68,7 @@ public class TooltipHandler : MonoBehaviour
     private IEnumerator Linger()
     {
         yield return new WaitForSeconds( lingerTime );
-        Data.subWindowText = tempString;
+        gameData.subWindowText = tempString;
         tempString = string.Empty;
     }
 

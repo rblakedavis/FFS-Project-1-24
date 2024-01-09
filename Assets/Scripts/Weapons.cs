@@ -7,7 +7,7 @@ public class Weapons : MonoBehaviour
     public float damage;
     
 
-    public void Attack(Enemy Target) {
+    public void Attack(EnemyBehavior Target) {
         Target.HP -= damage;
     }
 }

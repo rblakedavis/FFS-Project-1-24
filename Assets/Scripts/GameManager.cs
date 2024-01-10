@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subWindow;
     [SerializeField] private SceneChanger sceneChanger;
 
+    private Image healthBar;
+    private Image magicBar;
+
     private static GameManager _instance;
     private bool isInitialized = false;
 
@@ -40,6 +43,22 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        if (SceneManager.GetActiveScene().name == "Main")
+        {
+            subWindow = GameObject.Find("NotifWinowText").GetComponent<TextMeshProUGUI>();
+            sceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
+            health = GameObject.Find("CurHealth").GetComponent<TextMeshProUGUI>();
+            magic = GameObject.Find("CurMagic").GetComponent<TextMeshProUGUI>();
+            zone = GameObject.Find("CurZone").GetComponent<TextMeshProUGUI>();
+            level = GameObject.Find("CurLevel").GetComponent<TextMeshProUGUI>();
+            magicBar = GameObject.Find("MagicBarFill").GetComponent<Image>();
+            healthBar = GameObject.Find("HealthBarFill").GetComponent<Image>();
+            healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+            magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+
+        }
+        StartCoroutine(WaitForLoad());
+
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(_instance);
         Debug.Log("Awake");
@@ -56,12 +75,12 @@ public class GameManager : MonoBehaviour
         {
             if (isInitialized)
             {
-                Debug.LogError("Duplicate GameManager instance detected and initialized. Destroying this instance.");
+                Debug.Log("Duplicate GameManager instance detected and initialized. Destroying this instance.");
                 Destroy(gameObject);
             }
             else
             {
-                Debug.LogError("Duplicate GameManager instance detected. Destroying this instance without initialization.");
+                Debug.Log("Duplicate GameManager instance detected. Destroying this instance without initialization.");
                 Destroy(gameObject);
             }
         }
@@ -71,6 +90,8 @@ public class GameManager : MonoBehaviour
             gameData = ScriptableObject.CreateInstance<GameData>();
             DontDestroyOnLoad(gameData);
         }
+
+
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -89,9 +110,9 @@ public class GameManager : MonoBehaviour
             gameData.subWindowText = "Welcome to the game.";
             subWindow.text = gameData.subWindowText;
             zone.text = gameData.zoneNames[gameData.curZoneIndex];
-            level.text = gameData.levelCur.ToString();
-            magic.text = gameData.magicCur.ToString();
-            health.text = gameData.healthCur.ToString();
+            level.text = Player.Instance.level.ToString();
+            magic.text = Player.Instance.magic.ToString();
+            health.text = Player.Instance.hp.ToString();
             isInitialized = true;
             
         }
@@ -158,11 +179,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
+        if (subWindow != null)
         {
-            Debug.Log("Hello World");
-            subWindow.text = gameData.subWindowText;
+            if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
+            {
+                subWindow.text = gameData.subWindowText;
+                zone.text = gameData.zoneNames[gameData.curZoneIndex];
+                level.text = Player.Instance.level.ToString();
+                magic.text = Player.Instance.magic.ToString();
+                health.text = Player.Instance.hp.ToString();
+            }
         }
+        else Awake();
     }
 
     private void SetAspectRatio()
@@ -170,4 +198,8 @@ public class GameManager : MonoBehaviour
         Camera.main.aspect = 4f / 3f;
     }
 
+    private IEnumerator WaitForLoad() 
+    {
+        yield return null;
+    }
 }

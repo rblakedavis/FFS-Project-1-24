@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public float maxHP;
     public int level;
     public int magic;
+    public int maxMagic;
     public float attack;
 
     private static Player _instance;
@@ -41,10 +42,11 @@ public class Player : MonoBehaviour
                 // Initialize player stats using GameManager data
                 if (GameManager.Instance.gameData != null)
                 {
-                    hp = GameManager.Instance.gameData.healthCur;
-                    maxHP = GameManager.Instance.gameData.healthMax;
-                    level = GameManager.Instance.gameData.levelCur;
-                    magic = GameManager.Instance.gameData.magicCur;
+                    hp = GameManager.Instance.gameData.hp;
+                    maxHP = GameManager.Instance.gameData.maxHP;
+                    level = GameManager.Instance.gameData.level;
+                    magic = GameManager.Instance.gameData.magic;
+                    maxMagic = GameManager.Instance.gameData.maxMagic;
 
                     //placeholder attack until proper linking is done
                     attack = 1;

@@ -17,11 +17,19 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI magicTMP;
 
     [SerializeField] private TextMeshProUGUI battleText;
+    [SerializeField] private GameObject screenFlash;
+
     public Animator animator;
 
     public ScreenShake screenShake;
     private GameData gameData;
     public SceneChanger sceneChanger;
+
+    [SerializeField] float screenShakeDuration;
+    [SerializeField] float screenShakeMagnitude;
+   // [SerializeField] Color screenFlashColor;
+   // [SerializeField] float screenFlashDuration;
+
 
 
     void Awake()
@@ -73,6 +81,18 @@ public class BattleManager : MonoBehaviour
         sceneChanger.ChangeScene("Main");
     }
 
+    public void EnemyDead() 
+    {
+        gameData.subWindowText = "Enemy defeated. You lick off the blood on your weapon.";
+        sceneChanger.ChangeScene("Main");
+    }
+
+    public void playerHeal()
+    {
+        player.hp += player.healAmount;
+        player.magic -= 2;
+    }
+
 
 
     private IEnumerator BattleCoroutine()
@@ -81,10 +101,19 @@ public class BattleManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f / enemy.attacksPerSecond);
             player.hp -= enemy.damage;
+            player.hp = Mathf.RoundToInt(player.hp);
+            Quaternion quaternion = new Quaternion();
+            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
+            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
+
+            screenFlash.transform.rotation = quaternion;
+            screenFlash.transform.localScale = new Vector3(850, 850, 850);
+
+
 
             if (screenShake != null)
             {
-                StartCoroutine(screenShake.Shake(.1f, 1.5f));
+                StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
             }
 
             healthTMP.text = player.hp.ToString();

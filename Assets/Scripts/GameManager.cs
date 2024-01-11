@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 public class GameManager : MonoBehaviour
@@ -13,10 +14,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI magic;
     [SerializeField] private TextMeshProUGUI health;
     [SerializeField] private TextMeshProUGUI subWindow;
-    [SerializeField] private SceneChanger sceneChanger;
 
-    private Image healthBar;
-    private Image magicBar;
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image magicBar;
+
+    private static GameData resetGameData;
 
     private static GameManager _instance;
     private bool isInitialized = false;
@@ -43,58 +45,57 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (SceneManager.GetActiveScene().name == "Main")
-        {
-            subWindow = GameObject.Find("NotifWinowText").GetComponent<TextMeshProUGUI>();
-            sceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
-            health = GameObject.Find("CurHealth").GetComponent<TextMeshProUGUI>();
-            magic = GameObject.Find("CurMagic").GetComponent<TextMeshProUGUI>();
-            zone = GameObject.Find("CurZone").GetComponent<TextMeshProUGUI>();
-            level = GameObject.Find("CurLevel").GetComponent<TextMeshProUGUI>();
-            magicBar = GameObject.Find("MagicBarFill").GetComponent<Image>();
-            healthBar = GameObject.Find("HealthBarFill").GetComponent<Image>();
-            healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
-            magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
 
-        }
+
         StartCoroutine(WaitForLoad());
 
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(_instance);
         Debug.Log("Awake");
 
-        SetAspectRatio();
-
-        // Handle multiple instances of the GameManager
-        if (_instance == null)
+        if (_instance != this)
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (_instance != this)
-        {
-            if (isInitialized)
+            if (_instance.isInitialized)
             {
-                Debug.Log("Duplicate GameManager instance detected and initialized. Destroying this instance.");
-                Destroy(gameObject);
+                DestroyImmediate(_instance.transform.gameObject);
+                _instance = this;
+                isInitialized = true;
+                if (subWindow != null)
+                {
+                    if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
+                    {
+                        subWindow.text = gameData.subWindowText;
+                        zone.text = gameData.zoneNames[gameData.curZoneIndex];
+                        level.text = Player.Instance.level.ToString();
+                        magic.text = Player.Instance.magic.ToString();
+                        health.text = Player.Instance.hp.ToString();
+                        healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+                        magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+                    }
+                }
             }
-            else
-            {
-                Debug.Log("Duplicate GameManager instance detected. Destroying this instance without initialization.");
-                Destroy(gameObject);
-            }
+            else { DestroyImmediate(this); Debug.Log("Destroying this..."); }
+
+
         }
 
-        if (gameData == null) 
+            SetAspectRatio();
+
+        if (resetGameData == null) 
         {
-            gameData = ScriptableObject.CreateInstance<GameData>();
-            DontDestroyOnLoad(gameData);
+            resetGameData = ScriptableObject.CreateInstance<GameData>();
+            resetGameData.enemyList = gameData.enemyList;
+            resetGameData.enemySprites = gameData.enemySprites;
+
+            DontDestroyOnLoad(resetGameData);
         }
 
 
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    
 
     private void OnDestroy()
     {
@@ -158,11 +159,7 @@ public class GameManager : MonoBehaviour
                     Debug.LogError("Enemy Window not found.");
                 }
                 break;
-            
-            default:
-                Debug.LogWarning("Scene name not in this switch: " + scene.name);
-                break;
-            
+                        
             case "Loot":
 
                 break;
@@ -172,6 +169,13 @@ public class GameManager : MonoBehaviour
             case "Boss":
 
                 break;
+
+            case "GameOver":
+
+                break;
+
+
+
         }
         // Update any pertinent variables here
     }
@@ -179,18 +183,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (subWindow != null)
+        string activeScene = SceneManager.GetActiveScene().name;
+        if (Player.Instance.hp <= 0 &&  activeScene != "GameOver") 
         {
-            if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
-            {
-                subWindow.text = gameData.subWindowText;
-                zone.text = gameData.zoneNames[gameData.curZoneIndex];
-                level.text = Player.Instance.level.ToString();
-                magic.text = Player.Instance.magic.ToString();
-                health.text = Player.Instance.hp.ToString();
-            }
+            StartCoroutine(WaitForLoad());
+            if (Player.Instance.hp > 0) return;
+            SceneManager.LoadScene("GameOver");
         }
-        else Awake();
     }
 
     private void SetAspectRatio()
@@ -201,5 +200,17 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForLoad() 
     {
         yield return null;
+    }
+
+    private void HardReset()
+    {
+        gameData = resetGameData;
+        StartCoroutine(WaitForLoad());
+        Player.Instance.hp = gameData.hp;
+        Player.Instance.maxHP = gameData.maxHP;
+        Player.Instance.level = gameData.level;
+        Player.Instance.magic = gameData.magic;
+        Player.Instance.maxMagic = gameData.maxMagic;
+        SceneManager.LoadScene("Main");
     }
 }

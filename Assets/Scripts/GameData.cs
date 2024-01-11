@@ -8,7 +8,7 @@ using TMPro;
 public class GameData : ScriptableObject
 {
 
-    public string curZoneName;
+    //public string curZoneName;
     public int curZoneIndex = 0;
     public string[] zoneNames = {"Forest", "Cave", "Ruins", "Depths", "Underworld"};
     
@@ -66,6 +66,7 @@ public class GameData : ScriptableObject
     public int maxHP= 15;
     public int hp = 15;
     public int goldCur;
+    public int attack = 1;
 
     public string subWindowText = "example text";    
 

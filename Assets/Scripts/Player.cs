@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public int magic;
     public int maxMagic;
     public float attack;
+    public float healAmount = 0.25f;
 
     private static Player _instance;
     private bool isInitialized = false;
@@ -48,9 +49,7 @@ public class Player : MonoBehaviour
                     magic = GameManager.Instance.gameData.magic;
                     maxMagic = GameManager.Instance.gameData.maxMagic;
 
-                    //placeholder attack until proper linking is done
-                    attack = 1;
-                    //attack = GameManager.Instance.gameData.playerAttack;
+                    attack = GameManager.Instance.gameData.attack;
                 }
             }
             else

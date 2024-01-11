@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 
 public class GameManager : MonoBehaviour
@@ -19,6 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image magicBar;
 
     private static GameData resetGameData;
+
+    public UnityEvent onLevelUp;
+
 
     private static GameManager _instance;
     private bool isInitialized = false;
@@ -179,6 +183,22 @@ public class GameManager : MonoBehaviour
             if (Player.Instance.hp > 0) return;
             SceneManager.LoadScene("GameOver");
         }
+
+        if (Player.Instance.experience >= Player.Instance.expNextLevel)
+        {
+            //insert some shoddy math for an experience curve
+            Player.Instance.expNextLevel = (int)Mathf.Ceil(Player.Instance.experience * 1.4f * Player.Instance.level);
+            Player.Instance.level ++;
+
+            foreach (var kvp in Player.Instance.levelUp)
+            { 
+                string statName = kvp.Key;
+                float statIncrease = kvp.Value;
+
+                UpdateStat(statName, statIncrease);
+            }
+            GameManager.Instance.onLevelUp.Invoke();
+        }
     }
 
     private void SetAspectRatio()
@@ -201,5 +221,22 @@ public class GameManager : MonoBehaviour
         Player.Instance.magic = gameData.magic;
         Player.Instance.maxMagic = gameData.maxMagic;
         SceneManager.LoadScene("Main");
+    }
+
+    private void UpdateStat(string statName, float statIncrease)
+    {
+        var field = typeof(Player).GetField(statName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (field != null)
+        {
+            // Cast the result to float
+            float currentValue = (float)field.GetValue(Player.Instance);
+            float newValue = currentValue + statIncrease;
+            field.SetValue(Player.Instance, newValue);
+        }
+        else
+        {
+            Debug.Log($"{statName} is not a valid field.");
+        }
+
     }
 }

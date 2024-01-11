@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class BattleManager : MonoBehaviour
 {
@@ -37,7 +36,14 @@ public class BattleManager : MonoBehaviour
     public float playerShield = 0;
     public float maxShield;
 
+    private bool isAnyKeyDown;
+
+    private bool spawnEnemies = true;
+
+    private float timeElapsed;
+
     [SerializeField] private Image enemyImage;
+
 
     void Awake()
     {
@@ -49,7 +55,7 @@ public class BattleManager : MonoBehaviour
 
         gameData = GameManager.Instance.gameData;
 
-        healthTMP.text = player.hp.ToString();
+        healthTMP.text = Mathf.Floor(player.hp).ToString();
 
 
 
@@ -67,6 +73,8 @@ public class BattleManager : MonoBehaviour
         minRange = gameData.zoneOffset[gameData.curZoneIndex];
         maxRange = minRange + 2;
         enemy = CreateRandomEnemy(minRange, maxRange);
+
+        GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
     }
 
     void Start()
@@ -78,11 +86,21 @@ public class BattleManager : MonoBehaviour
 
     void Update()
     {
+        isAnyKeyDown = Input.anyKeyDown;
         if (enemy != null && enemy.curHealth <= 0)
         {
             StopCoroutine(BattleCoroutine());
             StartCoroutine(EnemyDead());
         }
+        if (enemy == null && spawnEnemies )
+        { 
+            CreateRandomEnemy(minRange, maxRange); 
+            if (enemy != null)
+            {
+                StartCoroutine(BattleCoroutine());
+            }
+        }
+
     }
 
     public void playerAttack()
@@ -141,55 +159,107 @@ private IEnumerator BattleCoroutine()
 
     private Enemy CreateRandomEnemy(int rangeMin, int rangeMax)
     {
-        int randomEnemy = Random.Range(rangeMin, rangeMax);
-        Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
-        Enemy enemyOut = ScriptableObject.CreateInstance<Enemy>();
-        enemyOut.name = enemyBlueprint.name;
-        enemyOut.damage = enemyBlueprint.damage;
-        enemyOut.damageModifier = enemyBlueprint.damageModifier;
-        enemyOut.health = enemyBlueprint.health;
-        enemyOut.curHealth = enemyBlueprint.curHealth;
-        enemyOut.expWorth = enemyBlueprint.expWorth;
-        enemyOut.attacksPerSecond = enemyBlueprint.attacksPerSecond;
-        enemyOut.sprite = enemyBlueprint.sprite;
-        enemyImage.sprite = enemyOut.sprite;
-        enemyHealthBar.fillAmount = enemyOut.curHealth / enemyOut.health;
+        if (spawnEnemies)
+        {
+            StopCoroutine(LevelUpCoroutine());
 
-        return enemyOut;
+            int randomEnemy = Random.Range(rangeMin, rangeMax);
+            Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
+            Enemy enemyOut = ScriptableObject.CreateInstance<Enemy>();
+            enemyOut.name = enemyBlueprint.name;
+            enemyOut.damage = enemyBlueprint.damage;
+            enemyOut.damageModifier = enemyBlueprint.damageModifier;
+            enemyOut.health = enemyBlueprint.health;
+            enemyOut.curHealth = enemyBlueprint.curHealth;
+            enemyOut.expWorth = enemyBlueprint.expWorth;
+            enemyOut.attacksPerSecond = enemyBlueprint.attacksPerSecond;
+            enemyOut.sprite = enemyBlueprint.sprite;
+            enemyImage.sprite = enemyOut.sprite;
+            enemyHealthBar.fillAmount = enemyOut.curHealth / enemyOut.health;
+
+
+            return enemyOut;
+        }
+        else return null;
     }
 
     public IEnumerator EnemyDead()
     {
-        for (int i = 0; i< enemyHealthGroup.Length; i++)
-        {
-            enemyHealthGroup[i].GetComponent<Image>().color -= new Color(0, 0, 0, 1);
-        }
-        Destroy(enemy);  enemy = null;
-        animator.SetBool("EnemyDead", true);
-        animator.SetInteger("EnemyIndex", -1);
-        battleText.text = gameData.winQuotes[Random.Range(0,gameData.winQuotes.Length -1)];
-
-        enemy = CreateRandomEnemy(minRange, maxRange);
-        float storeEneDam = enemy.damage;
-        enemy.damage = 0;
-
-        yield return new WaitForSeconds(1.5f);
-
-        animator.SetBool("EnemyDead", false);
-        animator.SetInteger("EnemyIndex", enemy.index);
-        enemy.damage = storeEneDam;
-        battleText.text = enemy.name + " appeared!";
+        spawnEnemies = false;
+        Player.Instance.experience += enemy.expWorth;
         for (int i = 0; i < enemyHealthGroup.Length; i++)
         {
-            enemyHealthGroup[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
+        enemyHealthGroup[i].GetComponent<Image>().color -= new Color(0, 0, 0, 1);
         }
-        StartCoroutine(BattleCoroutine());
+        Destroy(enemy); enemy = null;
+        animator.SetBool("EnemyDead", true);
+        animator.SetInteger("EnemyIndex", -1);
+        battleText.text = gameData.winQuotes[Random.Range(0, gameData.winQuotes.Length - 1)];
+        spawnEnemies = true;
+        enemy = CreateRandomEnemy(minRange, maxRange);
+        if (enemy != null)
+        {
+            float storeEneDam = enemy.damage;
+            enemy.damage = 0;
 
+            yield return new WaitForSeconds(1.5f);
 
+            animator.SetBool("EnemyDead", false);
+            animator.SetInteger("EnemyIndex", enemy.index);
+            enemy.damage = storeEneDam;
+            battleText.text = enemy.name + " appeared!";
+            for (int i = 0; i < enemyHealthGroup.Length; i++)
+            {
+                enemyHealthGroup[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
+            }
+            StartCoroutine(BattleCoroutine());
 
-
-        yield break;
+            yield break;
+        }
+        else
+        {
+            yield return null;
+        }
 
     }
 
+    public void OnLevelUp()
+    {
+        StartCoroutine(LevelUpCoroutine());
+    }
+
+    private IEnumerator LevelUpCoroutine()
+    {
+        spawnEnemies = false;
+
+        float elapsed = 0.0f;
+        float duration = 5.0f;
+
+        StopCoroutine(BattleCoroutine());
+        StopCoroutine(EnemyDead());
+
+        battleText.text = $"Level up! You are now level {Player.Instance.level}! " +
+            $"hp and magic restored. " +
+            $"attack and defense up! " +
+            $"Enemies will also be stronger...";
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        while (!isAnyKeyDown)
+        {
+            yield return null;
+        }
+
+        battleText.text = string.Empty;
+        spawnEnemies = true;
+        CreateRandomEnemy(maxRange, minRange);
+        yield break;
+    }
+
 }
+

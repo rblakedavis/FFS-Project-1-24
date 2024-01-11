@@ -17,7 +17,7 @@ public class Enemy : ScriptableObject
     public float curHealth;
 
 
-    public float expWorth;
+    public int expWorth;
 
     public float attacksPerSecond;
 

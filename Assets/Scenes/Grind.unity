@@ -2985,10 +2985,12 @@ MonoBehaviour:
   healthBar: {fileID: 740655921}
   enemyHealthBar: {fileID: 1368468032}
   healthTMP: {fileID: 571719613}
+  magicBar: {fileID: 535220892}
+  magicTMP: {fileID: 836568966}
   battleText: {fileID: 290497412}
   animator: {fileID: 1065308712}
   screenShake: {fileID: 22920730}
-  gameData: {fileID: 0}
+  sceneChanger: {fileID: 324704179}
 --- !u!4 &1796160104
 Transform:
   m_ObjectHideFlags: 0
@@ -3222,7 +3224,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1971855098}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1796160103}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: playerRun
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1971855098
 MonoBehaviour:
   m_ObjectHideFlags: 0

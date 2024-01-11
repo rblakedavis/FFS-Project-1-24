@@ -20,11 +20,13 @@ public class BattleManager : MonoBehaviour
     public Animator animator;
 
     public ScreenShake screenShake;
-    public GameData gameData;
+    private GameData gameData;
+    public SceneChanger sceneChanger;
 
 
     void Awake()
     {
+
         battleText.text = string.Empty;
 
         gameData = GameManager.Instance.gameData;
@@ -39,6 +41,8 @@ public class BattleManager : MonoBehaviour
         {
             Debug.LogError("ScreenShake script not found");
         }
+        healthBar.fillAmount = player.hp / player.maxHP;
+
     }
 
     void Start()
@@ -61,6 +65,12 @@ public class BattleManager : MonoBehaviour
             enemy.curHealth -= player.attack;
             enemyHealthBar.fillAmount = enemy.curHealth / enemy.health;
         }
+    }
+
+    public void playerRun()
+    {
+        gameData.subWindowText = "ran away...";
+        sceneChanger.ChangeScene("Main");
     }
 
 

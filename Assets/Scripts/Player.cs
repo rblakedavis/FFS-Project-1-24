@@ -5,10 +5,17 @@ public class Player : MonoBehaviour
 {
     public float hp;
     public float maxHP;
+    public float hpRegen;
+
     public int level;
-    public int magic;
-    public int maxMagic;
+
+    public float magic;
+    public float maxMagic;
+    public float magicRegen;
+
     public float attack;
+    public float defense;
+
 
     private static Player _instance;
     private bool isInitialized = false;
@@ -48,9 +55,7 @@ public class Player : MonoBehaviour
                     magic = GameManager.Instance.gameData.magic;
                     maxMagic = GameManager.Instance.gameData.maxMagic;
 
-                    //placeholder attack until proper linking is done
-                    attack = 1;
-                    //attack = GameManager.Instance.gameData.playerAttack;
+                    attack = GameManager.Instance.gameData.attack;
                 }
             }
             else

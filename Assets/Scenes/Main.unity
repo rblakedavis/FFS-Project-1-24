@@ -1379,10 +1379,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 0
   maxHP: 0
+  hpRegen: 0
   level: 0
   magic: 0
   maxMagic: 0
+  magicRegen: 0
   attack: 0
+  defense: 0
 --- !u!4 &796632936
 Transform:
   m_ObjectHideFlags: 0
@@ -3582,7 +3585,8 @@ MonoBehaviour:
   magic: {fileID: 852551885}
   health: {fileID: 1073196272}
   subWindow: {fileID: 290497414}
-  sceneChanger: {fileID: 324704179}
+  healthBar: {fileID: 1255253522}
+  magicBar: {fileID: 2128214632}
   gameData: {fileID: 11400000, guid: a002b2dce2edeca41977e630efb438a4, type: 2}
 --- !u!4 &1585130626
 Transform:

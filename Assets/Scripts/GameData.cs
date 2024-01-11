@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]
 public class GameData : ScriptableObject
 {
 
-    public string curZoneName;
+    //public string curZoneName;
     public int curZoneIndex = 0;
     public string[] zoneNames = {"Forest", "Cave", "Ruins", "Depths", "Underworld"};
     
@@ -61,15 +57,40 @@ public class GameData : ScriptableObject
 
     //Player stats    
     public int level= 1;
-    public int maxMagic = 2;
-    public int magic = 0;
-    public int maxHP= 15;
-    public int hp = 15;
+
+    public float maxMagic = 2;
+    public float magic = 0;
+    public float magicRegen = 0.2f;
+
+
+    public float maxHP = 15;
+    public float hp = 15;
+    public float hpRegen = 0.3f;
+
     public int goldCur;
+    public float attack = 1;
+    public float defense = 0.2f;
 
     public string subWindowText = "example text";    
 
     //Game object names    
     public string enemyImageName = "BaddiesWindow";
+
+    public string[] winQuotes =
+    {
+        "Enemy defeated. You lick off the blood on your weapon.",
+        "Victory achieved! The scent of triumph hangs in the air.",
+        "Foe vanquished. You wipe the sweat from your brow.",
+        "Enemy crushed. Your weapon gleams with the essence of conquest.",
+        "The adversary falls. Adrenaline courses through your veins.",
+        "Enemy Defeated! The echoes of battle fade.",
+        "Nuisance eliminated.A testament to your prowess.",
+        "Target neutralized. The taste of victory lingers the air.",
+        "Opponent overcome. Victory achieved.",
+        "Enemy eradicated. The shadows of conflict dissipate.",
+        "Adversary slain. Your weapon thirsts for more."
+
+
+    };
 
 }

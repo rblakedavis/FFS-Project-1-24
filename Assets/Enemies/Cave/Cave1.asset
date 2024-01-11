@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Cave1
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  enemyName: 
-  damage: 0
+  enemyName: Cave1
+  damage: 3
+  damageModifier: 0
   health: 0
   curHealth: 0
   expWorth: 0

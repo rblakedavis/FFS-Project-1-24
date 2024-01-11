@@ -3,27 +3,41 @@ using UnityEngine;
 
 public class ScreenShake : MonoBehaviour
 {
-    public IEnumerator Shake (float duration, float magnitude)
+    [SerializeField] private GameObject screenFlash;
+
+    public IEnumerator Shake(float shakeDuration, float shakeMagnitude, float flashDuration)
     {
         Debug.Log(transform.localPosition);
         Vector3 originalPos = transform.localPosition;
 
-        float elapsed = 0.0f;
+        float elapsedShake = 0.0f;
+        float elapsedFlash = 0.0f;
 
-        while (elapsed < duration) 
+        while (elapsedShake < shakeDuration)
         {
-            float x = originalPos.x + Random.Range(-1f, 1f) * magnitude;
-            float y = originalPos.y + Random.Range(-1f, 1f) * magnitude;
+            float x = originalPos.x + Random.Range(-1f, 1f) * shakeMagnitude;
+            float y = originalPos.y + Random.Range(-1f, 1f) * shakeMagnitude;
 
             transform.localPosition = new Vector3(x, y, originalPos.z);
             Debug.Log(transform.localPosition);
 
-
-            elapsed += Time.deltaTime;
+            elapsedShake += Time.deltaTime;
 
             yield return null;
         }
 
         transform.localPosition = originalPos;
+
+        while (elapsedFlash < flashDuration)
+        {
+            float scale = Mathf.Lerp(1f, 0f, elapsedFlash / flashDuration);
+            screenFlash.transform.localScale = new Vector3(scale, scale, scale);
+
+            elapsedFlash += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the screenFlash is fully faded out
+        screenFlash.transform.localScale = new Vector3(0, 0, 0);
     }
 }

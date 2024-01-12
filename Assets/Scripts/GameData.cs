@@ -63,8 +63,8 @@ public class GameData : ScriptableObject
     public float magicRegen = 0.2f;
 
 
-    public float maxHP = 15;
-    public float hp = 15;
+    public float maxHP = 300;
+    public float hp = 300;
     public float hpRegen = 0.3f;
 
     public int goldCur;

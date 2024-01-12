@@ -83,7 +83,6 @@ public class GameManager : MonoBehaviour
 
         }
 
-            SetAspectRatio();
 
         if (resetGameData == null) 
         {
@@ -201,10 +200,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetAspectRatio()
+    /*private void SetAspectRatio()
     {
         Camera.main.aspect = 4f / 3f;
-    }
+    }*/
 
     private IEnumerator WaitForLoad() 
     {

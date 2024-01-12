@@ -53,7 +53,6 @@ public class BattleManager : MonoBehaviour
         maxShield = player.hp / ( 2 + ( player.level / 5 ));
         battleText.text = string.Empty;
 
-        gameData = GameManager.Instance.gameData;
 
         healthTMP.text = Mathf.Floor(player.hp).ToString();
 
@@ -74,7 +73,6 @@ public class BattleManager : MonoBehaviour
         maxRange = minRange + 2;
         enemy = CreateRandomEnemy(minRange, maxRange);
 
-        GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
     }
 
     void Start()
@@ -108,7 +106,7 @@ public class BattleManager : MonoBehaviour
         if (player != null && enemy != null)
         {
                 enemy.curHealth -= player.attack;
-                enemyHealthBar.fillAmount = enemy.curHealth / enemy.health;
+                enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
         }
     }
 
@@ -138,11 +136,9 @@ private IEnumerator BattleCoroutine()
             float trueDamage = enemy.damage + (enemy.damageModifier * (player.level - 1));
             player.hp -= trueDamage;
 
-            Quaternion quaternion = new Quaternion();
-            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
-            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
-            screenFlash.transform.rotation = quaternion;
-            screenFlash.transform.localScale = new Vector3(850, 850, 850);
+                screenFlash.transform.eulerAngles = new Vector3(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f));
+
+                screenFlash.transform.localScale = new Vector3(850, 850, 850);
 
             if (screenShake != null)
             {
@@ -169,13 +165,13 @@ private IEnumerator BattleCoroutine()
             enemyOut.name = enemyBlueprint.name;
             enemyOut.damage = enemyBlueprint.damage;
             enemyOut.damageModifier = enemyBlueprint.damageModifier;
-            enemyOut.health = enemyBlueprint.health;
+            enemyOut.maxHealth = enemyBlueprint.maxHealth;
             enemyOut.curHealth = enemyBlueprint.curHealth;
             enemyOut.expWorth = enemyBlueprint.expWorth;
             enemyOut.attacksPerSecond = enemyBlueprint.attacksPerSecond;
             enemyOut.sprite = enemyBlueprint.sprite;
             enemyImage.sprite = enemyOut.sprite;
-            enemyHealthBar.fillAmount = enemyOut.curHealth / enemyOut.health;
+            enemyHealthBar.fillAmount = enemyOut.curHealth / enemyOut.maxHealth;
 
 
             return enemyOut;

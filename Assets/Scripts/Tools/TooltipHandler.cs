@@ -37,11 +37,13 @@ public void OnMouseEnter()
 
             case "BossBtn":
 
+
                 break;
 
             case "ShopBtn":
 
                 shopTooltip = "Current Gold = " + gameData.goldCur;
+                
                 if (gameData.subWindowText != shopTooltip)
                 {
                     tempString = gameData.subWindowText;
@@ -71,5 +73,6 @@ public void OnMouseEnter()
         gameData.subWindowText = tempString;
         tempString = string.Empty;
     }
+    
 
 }

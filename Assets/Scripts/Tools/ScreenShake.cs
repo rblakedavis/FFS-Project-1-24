@@ -7,7 +7,6 @@ public class ScreenShake : MonoBehaviour
 
     public IEnumerator Shake(float shakeDuration, float shakeMagnitude, float flashDuration)
     {
-        Debug.Log(transform.localPosition);
         Vector3 originalPos = transform.localPosition;
 
         float elapsedShake = 0.0f;
@@ -19,7 +18,6 @@ public class ScreenShake : MonoBehaviour
             float y = originalPos.y + Random.Range(-1f, 1f) * shakeMagnitude;
 
             transform.localPosition = new Vector3(x, y, originalPos.z);
-            Debug.Log(transform.localPosition);
 
             elapsedShake += Time.deltaTime;
 

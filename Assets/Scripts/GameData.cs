@@ -22,14 +22,8 @@ public class GameData : ScriptableObject
     
     public int curEnemy;
 
-    public string[] enemyNames = 
-    {
-        "wolf",     "forest2",  "forest3", 
-        "cave1",    "cave2",    "cave3",
-        "ruins1",   "ruins2",  "ruins3",
-        "depths1",   "depths2",     "depths3",
-        "underworld1",  "underworld2",  "underworld3"
-    };
+
+
     public float[] enemyAttackValues =
     {
         2f,     3f,     1f,
@@ -56,16 +50,16 @@ public class GameData : ScriptableObject
     };
 
     //Player stats    
-    public int level= 1;
+    public int level= 1; 
 
     public float maxMagic = 2;
     public float magic = 0;
-    public float magicRegen = 0.2f;
+    public float magicRegen = 0.1f;
 
 
-    public float maxHP = 300;
-    public float hp = 300;
-    public float hpRegen = 0.3f;
+    public float maxHP = 15;
+    public float hp = 15;
+    public float hpRegen = 0.15f;
 
     public int goldCur;
     public float attack = 1;

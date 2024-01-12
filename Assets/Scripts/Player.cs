@@ -58,11 +58,16 @@ public class Player : MonoBehaviour
                 {
                     hp = GameManager.Instance.gameData.hp;
                     maxHP = GameManager.Instance.gameData.maxHP;
+                    hpRegen = GameManager.Instance.gameData.hpRegen;
+
                     level = GameManager.Instance.gameData.level;
+
                     magic = GameManager.Instance.gameData.magic;
+                    magicRegen = GameManager.Instance.gameData.magicRegen;
                     maxMagic = GameManager.Instance.gameData.maxMagic;
 
                     attack = GameManager.Instance.gameData.attack;
+                    defense = GameManager.Instance.gameData.defense;
 
                     levelUp = new Dictionary<string, float>
                     {

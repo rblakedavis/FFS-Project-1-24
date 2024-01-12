@@ -4,15 +4,16 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-public class BattleManager : MonoBehaviour
+public class NewBattleManager : MonoBehaviour
 {
     public Enemy enemy;
 
     private Player player;
     [SerializeField] private Image healthBar;
-    [SerializeField] private Image enemyHealthBar;
-    [SerializeField] private GameObject[] enemyHealthGroup;
     [SerializeField] private TextMeshProUGUI healthTMP;
+
+    [SerializeField] private Image enemyHealthBar;
+    [SerializeField] private GameObject[] showAndHideEnemyHealth;
 
     [SerializeField] private Image magicBar;
     [SerializeField] private TextMeshProUGUI magicTMP;
@@ -20,96 +21,118 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI battleText;
     [SerializeField] private GameObject screenFlash;
 
+    public float playerShield = 0;
+    public float maxShield;
+
     public Animator animator;
 
+    //tools
     public ScreenShake screenShake;
     private GameData gameData;
     public SceneChanger sceneChanger;
 
     [SerializeField] float screenShakeDuration;
     [SerializeField] float screenShakeMagnitude;
-    // [SerializeField] Color screenFlashColor;
-    // [SerializeField] float screenFlashDuration;
-    private int minRange;
-    private int maxRange;
 
-    public float playerShield = 0;
-    public float maxShield;
+    private float minRange;
+    private float maxRange;
 
-    private bool isAnyKeyDown;
+    private float enemyCooldown;
 
-    private bool spawnEnemies = true;
-
-    private float timeElapsed;
-
-    [SerializeField] private Image enemyImage;
-
-
-    void Awake()
+    private void Awake()
     {
+        //clear the battle text window
+        battleText.text = string.Empty;
+
+        //setup gamedata and player references
         gameData = GameManager.Instance.gameData;
         player = Player.Instance;
 
-        maxShield = player.hp / ( 2 + ( player.level / 5 ));
-        battleText.text = string.Empty;
 
-
+        //setup player shield, health, magic
+        maxShield = player.hp / (2 + (player.level / 5));
         healthTMP.text = Mathf.Floor(player.hp).ToString();
+        healthBar.fillAmount = player.hp / player.maxHP;
+        //magicTMP... 
+        //...
 
-
-
+        //setup Screen effects
         screenShake = Camera.main.GetComponent<ScreenShake>();
         if (screenShake == null)
         {
-            Debug.LogError("ScreenShake script not found");
+            Debug.Log("ScreenShake script not found");
         }
-        healthBar.fillAmount = player.hp / player.maxHP;
 
+        //setup and create a new enemy
+        minRange = gameData.zoneOffset[gameData.curZoneIndex] - .4f;
+        Debug.Log("Min range is" + minRange);
+        maxRange = minRange + 2.4f; /* use a constant of 2.4 (because of the way range works) here... assumes ALL zones have 3 enemies*/
+        Debug.Log("Max range is" + maxRange);
 
-        //create a random enemy based on the current zone.
-        // PLACEHOLDER = use a constant of 2
-        // assumes all zones have 3 enemies
-        minRange = gameData.zoneOffset[gameData.curZoneIndex];
-        maxRange = minRange + 2;
+        GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
+
         enemy = CreateRandomEnemy(minRange, maxRange);
-
-    }
-
-    void Start()
-    {
-        StartCoroutine(BattleCoroutine());
-        // placeholder stats for proper implementation
-
-    }
-
-    void Update()
-    {
-        isAnyKeyDown = Input.anyKeyDown;
-        if (enemy != null && enemy.curHealth <= 0)
+        if (enemy != null)
         {
-            StopCoroutine(BattleCoroutine());
-            StartCoroutine(EnemyDead());
+           enemyCooldown = enemy.attacksPerSecond / 1f;
         }
-        if (enemy == null && spawnEnemies )
-        { 
-            CreateRandomEnemy(minRange, maxRange); 
-            if (enemy != null)
+    }
+
+    private void Start()
+    {
+        bool isInitialized = false;
+        if (!isInitialized)
+        {
+            battleText.text = $"{enemy.name} appeared!";
+            isInitialized = true;
+        }
+
+        //call the battle method
+    }
+
+    private void Update()
+    {
+        if (enemy != null)
+        {
+            if (enemy.curHealth <= 0)
             {
-                StartCoroutine(BattleCoroutine());
+                enemyCooldown = 2.5f;
+                EnemyDead();
+            }
+            else if (enemyCooldown >= 0)
+            {
+                enemyCooldown -= Time.deltaTime;
+            }
+            else if (enemyCooldown < 0)
+            {
+                enemyCooldown = enemy.attacksPerSecond / 1f;
+                playerTakeDamage();
+            }
+
+            if (enemy.damage <= 0 &&  enemyCooldown <= 1) 
+            {
+                animator.SetBool("EnemyDead", false);
+                animator.SetInteger("EnemyIndex", enemy.index);
+                enemy.damage = gameData.enemyList[enemy.index].damage;
+                battleText.text = $"{enemy.name} appeared!";
+                enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
+                for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
+                {
+                    showAndHideEnemyHealth[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
+                }
+
             }
         }
-
     }
 
     public void playerAttack()
     {
-        if (player != null && enemy != null)
+        if (enemy != null && enemy.damage > 0)
         {
-                enemy.curHealth -= player.attack;
-                enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
+            enemy.curHealth -= player.attack;
+            enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
         }
     }
-
     public void playerDefend()
     {
         if (player != null && enemy != null)
@@ -117,145 +140,94 @@ public class BattleManager : MonoBehaviour
             playerShield += Player.Instance.defense;
         }
     }
-
     public void playerRun()
     {
         gameData.subWindowText = "ran away...";
         sceneChanger.ChangeScene("Main");
     }
 
-
-
-private IEnumerator BattleCoroutine()
-{
-    while (enemy != null && enemy.damage > 0)
+    private Enemy CreateRandomEnemy(float minRange, float maxRange)
     {
-        yield return new WaitForSeconds(1f / enemy.attacksPerSecond);
-        if (enemy.damage > 0)
+        int randomEnemy = (int)Mathf.Round(Random.Range(minRange, maxRange));
+
+        
+
+        Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
+
+        Debug.Log("enemy blueprint is "+ enemyBlueprint);
+        Debug.Log("random enemy is " + randomEnemy);
+        Enemy enemyCopy = ScriptableObject.Instantiate(enemyBlueprint);
+        string originalName = enemyCopy.name;
+        enemyCopy.name = originalName.Replace("(Clone)", "");
+
+        animator.SetInteger("EnemyIndex", randomEnemy); // 0 is a placeholder for further animations.
+
+        return enemyCopy;
+    }
+
+    private void playerTakeDamage()
+    {
+        float trueDamage = enemy.damage + (enemy.damageModifier * (player.level - 1) / 2);
+        if (playerShield > trueDamage)
         {
-            float trueDamage = enemy.damage + (enemy.damageModifier * (player.level - 1));
+            playerShield -= trueDamage;
+            //play a sound? show a shield graphic?
+            // decrease shield bar
+        }
+        else if (playerShield > 0 && playerShield  <= trueDamage)
+        {
+            float newDamage = trueDamage - playerShield;
+            player.hp -= newDamage;
+            playerShield = 0;
+            //play a shield break sound? / graphic?
+        }
+        else if (playerShield <= 0)
+        {
             player.hp -= trueDamage;
 
-                screenFlash.transform.eulerAngles = new Vector3(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f));
+            Quaternion quaternion = new Quaternion();
+            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
+            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
+            screenFlash.transform.rotation = quaternion;
+            screenFlash.transform.localScale = new Vector3(850, 850, 850);
+            StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
 
-                screenFlash.transform.localScale = new Vector3(850, 850, 850);
-
-            if (screenShake != null)
-            {
-                StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
-            }
-
-            healthTMP.text = player.hp.ToString();
-
-            battleText.text = "You took " + trueDamage + " damage from " + enemy.name;
+            healthTMP.text = Mathf.Floor(player.hp).ToString();
+            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.name}";
             healthBar.fillAmount = player.hp / player.maxHP;
         }
     }
-}
 
-    private Enemy CreateRandomEnemy(int rangeMin, int rangeMax)
+    public void EnemyDead()
     {
-        if (spawnEnemies)
-        {
-            StopCoroutine(LevelUpCoroutine());
-
-            int randomEnemy = Random.Range(rangeMin, rangeMax);
-            Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
-            Enemy enemyOut = ScriptableObject.CreateInstance<Enemy>();
-            enemyOut.name = enemyBlueprint.name;
-            enemyOut.damage = enemyBlueprint.damage;
-            enemyOut.damageModifier = enemyBlueprint.damageModifier;
-            enemyOut.maxHealth = enemyBlueprint.maxHealth;
-            enemyOut.curHealth = enemyBlueprint.curHealth;
-            enemyOut.expWorth = enemyBlueprint.expWorth;
-            enemyOut.attacksPerSecond = enemyBlueprint.attacksPerSecond;
-            enemyOut.sprite = enemyBlueprint.sprite;
-            enemyImage.sprite = enemyOut.sprite;
-            enemyHealthBar.fillAmount = enemyOut.curHealth / enemyOut.maxHealth;
-
-
-            return enemyOut;
-        }
-        else return null;
-    }
-
-    public IEnumerator EnemyDead()
-    {
-        spawnEnemies = false;
         Player.Instance.experience += enemy.expWorth;
-        for (int i = 0; i < enemyHealthGroup.Length; i++)
-        {
-        enemyHealthGroup[i].GetComponent<Image>().color -= new Color(0, 0, 0, 1);
-        }
         Destroy(enemy); enemy = null;
+        for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
+        {
+            showAndHideEnemyHealth[i].GetComponent<Image>().color -= new Color(0, 0, 0, 1);
+        }
         animator.SetBool("EnemyDead", true);
         animator.SetInteger("EnemyIndex", -1);
         battleText.text = gameData.winQuotes[Random.Range(0, gameData.winQuotes.Length - 1)];
-        spawnEnemies = true;
         enemy = CreateRandomEnemy(minRange, maxRange);
-        if (enemy != null)
-        {
-            float storeEneDam = enemy.damage;
-            enemy.damage = 0;
-
-            yield return new WaitForSeconds(1.5f);
-
-            animator.SetBool("EnemyDead", false);
-            animator.SetInteger("EnemyIndex", enemy.index);
-            enemy.damage = storeEneDam;
-            battleText.text = enemy.name + " appeared!";
-            for (int i = 0; i < enemyHealthGroup.Length; i++)
-            {
-                enemyHealthGroup[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
-            }
-            StartCoroutine(BattleCoroutine());
-
-            yield break;
-        }
-        else
-        {
-            yield return null;
-        }
-
+        enemy.damage = 0;
     }
+    
 
     public void OnLevelUp()
     {
-        StartCoroutine(LevelUpCoroutine());
-    }
-
-    private IEnumerator LevelUpCoroutine()
-    {
-        spawnEnemies = false;
-
-        float elapsed = 0.0f;
-        float duration = 5.0f;
-
-        StopCoroutine(BattleCoroutine());
-        StopCoroutine(EnemyDead());
-
+        enemyCooldown = 5f;
         battleText.text = $"Level up! You are now level {Player.Instance.level}! " +
-            $"hp and magic restored. " +
-            $"attack and defense up! " +
-            $"Enemies will also be stronger...";
+                $"hp and magic restored. " +
+                $"attack and defense up! " +
+                $"Enemies will also be stronger...";
+        player.hp = player.maxHP;
+        player.magic = player.maxMagic;
+        healthBar.fillAmount = player.hp / player.maxHP;
+        healthTMP.text = Mathf.Floor(player.hp).ToString();
 
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
 
-            yield return null;
-        }
-
-        while (!isAnyKeyDown)
-        {
-            yield return null;
-        }
-
-        battleText.text = string.Empty;
-        spawnEnemies = true;
-        CreateRandomEnemy(maxRange, minRange);
-        yield break;
+        return;
     }
 
 }
-

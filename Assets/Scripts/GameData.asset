@@ -25,25 +25,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 593d7939eed4dfb45b6c64f021428318, type: 3}
   enemyList:
   - {fileID: 11400000, guid: 72673eaa78e08f24989f6a8cb195328d, type: 2}
-  - {fileID: 11400000, guid: 72673eaa78e08f24989f6a8cb195328d, type: 2}
-  - {fileID: 11400000, guid: 72673eaa78e08f24989f6a8cb195328d, type: 2}
+  - {fileID: 11400000, guid: f0262465204f8a840b97a3197ca771f0, type: 2}
+  - {fileID: 11400000, guid: 43f6b254163235b4dbd90ce7d92e504a, type: 2}
   curEnemy: 0
-  enemyNames:
-  - wolf
-  - forest2
-  - forest3
-  - cave1
-  - cave2
-  - cave3
-  - ruins1
-  - ruins2
-  - ruins3
-  - depths1
-  - depths2
-  - depths3
-  - underworld1
-  - underworld2
-  - underworld3
   enemyAttackValues:
   - 2
   - 3
@@ -87,7 +71,7 @@ MonoBehaviour:
   goldCur: 0
   attack: 1
   defense: 0.2
-  subWindowText: Enemy eradicated. The shadows of conflict dissipate.
+  subWindowText: You must be level 5 to fight this zone"s boss
   enemyImageName: BaddiesWindow
   winQuotes:
   - Enemy defeated. You lick off the blood on your weapon.

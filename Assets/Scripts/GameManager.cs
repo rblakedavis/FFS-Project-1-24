@@ -71,19 +71,7 @@ public class GameManager : MonoBehaviour
                 DestroyImmediate(_instance.transform.gameObject);
                 _instance = this;
                 isInitialized = true;
-                if (subWindow != null)
-                {
-                    if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
-                    {
-                        subWindow.text = gameData.subWindowText;
-                        zone.text = gameData.zoneNames[gameData.curZoneIndex];
-                        level.text = Player.Instance.level.ToString();
-                        magic.text = Mathf.Floor(Player.Instance.magic).ToString();
-                        health.text = Mathf.Floor(Player.Instance.hp).ToString();
-                        healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
-                        magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
-                    }
-                }
+
             }
             else { DestroyImmediate(this); Debug.Log("Destroying this..."); }
 
@@ -112,12 +100,6 @@ public class GameManager : MonoBehaviour
             magic.text = Mathf.Floor(Player.Instance.magic).ToString();
             health.text = Mathf.Floor(Player.Instance.hp).ToString();
 
-           /* Player.Instance.hp = resetGameData.hp;
-            Player.Instance.maxHP = resetGameData.maxHP;
-            Player.Instance.level = resetGameData.level;
-            Player.Instance.magic = resetGameData.magic;
-            Player.Instance.maxMagic = resetGameData.maxMagic;
-           */
             isInitialized = true;           
         }
     }
@@ -129,7 +111,6 @@ public class GameManager : MonoBehaviour
         switch (scene.name)
         {
             case "Main":
-                //if main music is already playing => Don't reset
                 if (!isMainMenuMusicPlaying)
                 {
                     AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
@@ -149,7 +130,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case "Boss":
-                AudioManager.Instance.PlaySpecificBossMusic(gameData.curZoneIndex);
+                AudioManager.Instance.PlaySpecificBossMusic(GameData.Instance.curZoneIndex);
                 isMainMenuMusicPlaying = false;
                 break;
 
@@ -218,18 +199,20 @@ public class GameManager : MonoBehaviour
             bossRequiredLevel = (1 + gameData.curZoneIndex) * 5;
             GameManager.Instance.onLevelUp.Invoke();
         }
-        if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
+        if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != GameData.Instance.subWindowText)
         {
-            subWindow.text = gameData.subWindowText;
+            subWindow.text = GameData.Instance.subWindowText;
+            zone.text = GameData.Instance.zoneNames[GameData.Instance.curZoneIndex];
+            level.text = Player.Instance.level.ToString();
+            magic.text = Mathf.Floor(Player.Instance.magic).ToString();
+            health.text = Mathf.Floor(Player.Instance.hp).ToString();
+            healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+            magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+
 
         }
+
     }
-
-
-        /*private void SetAspectRatio()
-        {
-            Camera.main.aspect = 4f / 3f;
-        }*/
 
         private IEnumerator WaitForLoad() 
     {

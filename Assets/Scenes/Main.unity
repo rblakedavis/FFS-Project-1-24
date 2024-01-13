@@ -1688,7 +1688,7 @@ MonoBehaviour:
   magic: 0
   maxMagic: 2
   magicRegen: 0.1
-  attack: 1
+  attack: 5000
   defense: 0.2
 --- !u!4 &796632936
 Transform:

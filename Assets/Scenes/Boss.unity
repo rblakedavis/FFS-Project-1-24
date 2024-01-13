@@ -1885,8 +1885,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: NewBattleManager, Assembly-CSharp
+      - m_Target: {fileID: 1796160105}
+        m_TargetAssemblyTypeName: BossBattleManager, Assembly-CSharp
         m_MethodName: playerDefend
         m_Mode: 1
         m_Arguments:
@@ -3386,8 +3386,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: NewBattleManager, Assembly-CSharp
+      - m_Target: {fileID: 1796160105}
+        m_TargetAssemblyTypeName: BossBattleManager, Assembly-CSharp
         m_MethodName: playerAttack
         m_Mode: 1
         m_Arguments:

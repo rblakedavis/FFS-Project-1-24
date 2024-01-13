@@ -38,6 +38,7 @@ public class NewBattleManager : MonoBehaviour
     private float maxRange;
 
     private float enemyCooldown;
+    private float textCooldown;
 
     private void Awake()
     {
@@ -45,7 +46,10 @@ public class NewBattleManager : MonoBehaviour
         battleText.text = string.Empty;
 
         //setup gamedata and player references
-        gameData = GameManager.Instance.gameData;
+        gameData = GameData.Instance;
+
+        StartCoroutine(WaitForGameData());
+
         player = Player.Instance;
 
 
@@ -96,14 +100,14 @@ public class NewBattleManager : MonoBehaviour
         {
             if (enemy.curHealth <= 0)
             {
-                enemyCooldown = 2.5f;
+                enemyCooldown = 4f;
                 EnemyDead();
             }
-            else if (enemyCooldown >= 0)
+            else if (enemyCooldown > 0)
             {
                 enemyCooldown -= Time.deltaTime;
             }
-            else if (enemyCooldown < 0)
+            else if (enemyCooldown <= 0)
             {
                 enemyCooldown = enemy.attacksPerSecond / 1f;
                 playerTakeDamage();
@@ -123,6 +127,16 @@ public class NewBattleManager : MonoBehaviour
 
             }
         }
+        textCooldown = enemyCooldown;
+        if (textCooldown <= 0.5f)
+        {
+            battleText.text = string.Empty;
+        }
+
+        healthBar.fillAmount = player.hp / player.maxHP;
+        healthTMP.text = Mathf.Floor(player.hp).ToString();
+        magicBar.fillAmount = player.magic / player.maxMagic;
+        magicTMP.text = Mathf.Floor(player.magic).ToString();
     }
 
     public void playerAttack()
@@ -185,10 +199,8 @@ public class NewBattleManager : MonoBehaviour
         {
             player.hp -= trueDamage;
 
-            Quaternion quaternion = new Quaternion();
-            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
-            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
-            screenFlash.transform.rotation = quaternion;
+                screenFlash.transform.eulerAngles = new Vector3(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f));
+
             screenFlash.transform.localScale = new Vector3(850, 850, 850);
             StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
 
@@ -216,18 +228,31 @@ public class NewBattleManager : MonoBehaviour
 
     public void OnLevelUp()
     {
-        enemyCooldown = 5f;
-        battleText.text = $"Level up! You are now level {Player.Instance.level}! " +
-                $"hp and magic restored. " +
-                $"attack and defense up! " +
-                $"Enemies will also be stronger...";
+        enemyCooldown = 6f;
+        battleText.text = $"Lv up! You are Lv {Player.Instance.level}! \n" +
+                $"Hp and Mag up! \n" +
+                $"Atk is {Mathf.Ceil(player.attack)}, Def is {Mathf.Ceil(player.defense)} \n \n" +
+                $"Enemies got stronger...";
         player.hp = player.maxHP;
         player.magic = player.maxMagic;
-        healthBar.fillAmount = player.hp / player.maxHP;
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
+
 
 
         return;
+    }
+
+    private IEnumerator WaitForGameData()
+    {
+        if (gameData != GameData.Instance)
+        {
+            yield return new WaitForEndOfFrame();
+            gameData = GameData.Instance;
+            Awake();
+        }
+        else
+        {
+            StopAllCoroutines();
+        }
     }
 
 }

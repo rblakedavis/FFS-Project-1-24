@@ -18,22 +18,21 @@ public class TooltipHandler : MonoBehaviour
 
     private void Start()
     {
-            gameData = GameManager.Instance.gameData;
+            gameData = GameData.Instance;
     }
 
 public void OnMouseEnter()
     {
         Debug.Log("mouse enter");
-        Debug.Log(gameData.subWindowText);
         
         string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip };
 
 
 
 
-        if (!excludedTooltips.Contains(gameData.subWindowText)) 
+        if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text)) 
         {
-            tempString = gameData.subWindowText;
+            tempString = GameManager.Instance.subWindow.text;
         }
 
 
@@ -41,7 +40,7 @@ public void OnMouseEnter()
         {
             case "BossBtn":
                 int playerRequiredLevel = GameManager.Instance.bossRequiredLevel;
-                if (gameData.level < playerRequiredLevel)
+                if (Player.Instance.level < playerRequiredLevel)
                 {
                     bossTooltip = $"You must be level {playerRequiredLevel} to fight this zone\"s boss";
                 }
@@ -52,7 +51,7 @@ public void OnMouseEnter()
                 }
                 if (gameData.subWindowText != bossTooltip)
                 {
-                    tempString = gameData.subWindowText;
+                    tempString = GameManager.Instance.subWindow.text;
                 }
                 gameData.subWindowText = bossTooltip;
                 Debug.Log(gameData.subWindowText);

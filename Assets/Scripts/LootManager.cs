@@ -51,8 +51,8 @@ public class LootManager : MonoBehaviour
 
     int GoldFormula()
     {
-        float goldMultiplier = Random.Range(minGoldMultiplier + gameData.level / 10, maxGoldMultiplier + gameData.level / 10);
-        int goldOutput = (int)((goldConstant + gameData.level) * goldMultiplier);
+        float goldMultiplier = Random.Range(minGoldMultiplier + Player.Instance.level / 10, maxGoldMultiplier + Player.Instance.level / 10);
+        int goldOutput = (int)((goldConstant + Player.Instance.level) * goldMultiplier);
 
         return goldOutput;
     }

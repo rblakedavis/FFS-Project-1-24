@@ -4,11 +4,15 @@ using UnityEngine.SceneManagement;
 public class SceneChanger : MonoBehaviour
 {
     GameData gameData;
-
+    Player player;
 
     private void Awake()
     {
         gameData = GameManager.Instance.gameData;
+    }
+    private void Start()
+    {
+        player = Player.Instance;
     }
     public void ChangeScene(string sceneName)
     {
@@ -16,7 +20,7 @@ public class SceneChanger : MonoBehaviour
         {
             SceneManager.LoadScene(sceneName);
         }
-        else if (gameData.level >= GameManager.Instance.bossRequiredLevel)
+        else if (player.level >= GameManager.Instance.bossRequiredLevel)
         {
             SceneManager.LoadScene(sceneName);
         }

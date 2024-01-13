@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
 
     public float attack;
     public float defense;
-
     public Dictionary<string, float> levelUp;
+
 
 
 
@@ -52,34 +52,6 @@ public class Player : MonoBehaviour
             {
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
-
-                // Initialize player stats using GameManager data
-                if (GameManager.Instance.gameData != null)
-                {
-                    hp = GameManager.Instance.gameData.hp;
-                    maxHP = GameManager.Instance.gameData.maxHP;
-                    hpRegen = GameManager.Instance.gameData.hpRegen;
-
-                    level = GameManager.Instance.gameData.level;
-
-                    magic = GameManager.Instance.gameData.magic;
-                    magicRegen = GameManager.Instance.gameData.magicRegen;
-                    maxMagic = GameManager.Instance.gameData.maxMagic;
-
-                    attack = GameManager.Instance.gameData.attack;
-                    defense = GameManager.Instance.gameData.defense;
-
-                    levelUp = new Dictionary<string, float>
-                    {
-                        {"maxHP", 2f + .2f*Player.Instance.level},
-                        {"hpRegen", .05f +.02f*Player.Instance.level},
-                        {"maxMagic", .5f + .1f *Player.Instance.level },
-                        {"magicRegen", .03f + .01f*Player.Instance.level},
-                        {"attack", .5f + .01f*Player.Instance.level},
-                        {"defense", .4f + .01f*Player.Instance.level },
-
-                    };
-                }
             }
             else
             {
@@ -90,6 +62,19 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(WaitForGameManager());
         }
+    }
+
+    private void Start()
+    {
+        levelUp = new Dictionary<string, float>
+        {
+            {"maxHP", 2f + .2f*Player.Instance.level},
+            {"hpRegen", .05f +.02f*Player.Instance.level},
+            {"maxMagic", .5f + .1f *Player.Instance.level },
+            {"magicRegen", .03f + .01f*Player.Instance.level},
+            {"attack", .5f + .01f*Player.Instance.level},
+            {"defense", .4f + .01f*Player.Instance.level },
+        };
     }
 
     private IEnumerator WaitForGameManager()

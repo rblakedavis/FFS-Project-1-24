@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image magicBar;
     private bool isMainMenuMusicPlaying = true;
 
-    private static GameData resetGameData;
+    [SerializeField]private GameData resetGameData;
 
     public UnityEvent onLevelUp;
     public int bossRequiredLevel;
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         if (Player.Instance != null)
         {
-            bossRequiredLevel = (1 + gameData.curZoneIndex) * 5;
+            bossRequiredLevel = (1 + GameData.Instance.curZoneIndex) * 5;
         }
 
         StartCoroutine(WaitForLoad());
@@ -89,19 +89,6 @@ public class GameManager : MonoBehaviour
 
 
         }
-
-
-        if (resetGameData == null) 
-        {
-            resetGameData = ScriptableObject.CreateInstance<GameData>();
-            resetGameData.enemyList = gameData.enemyList;
-            resetGameData.enemySprites = gameData.enemySprites;
-
-            DontDestroyOnLoad(resetGameData);
-        }
-
-
-
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -112,12 +99,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Destroyed");
     }
 
-    private void Start()
+    private void OnEnable()
     {
         if (!isInitialized && SceneManager.GetActiveScene().name == "Main")
         {
-            Debug.Log("Start");
-
+            gameData = GameData.Instance;
+            
             gameData.subWindowText = "Welcome to the game.";
             subWindow.text = gameData.subWindowText;
             zone.text = gameData.zoneNames[gameData.curZoneIndex];
@@ -125,17 +112,13 @@ public class GameManager : MonoBehaviour
             magic.text = Mathf.Floor(Player.Instance.magic).ToString();
             health.text = Mathf.Floor(Player.Instance.hp).ToString();
 
-            Player.Instance.hp = gameData.hp;
-            Player.Instance.maxHP = gameData.maxHP;
-            Player.Instance.level = gameData.level;
-            Player.Instance.magic = gameData.magic;
-            Player.Instance.maxMagic = gameData.maxMagic;
-
-            gameData.goldCur = 0;
-
-            isInitialized = true;
-
-            
+           /* Player.Instance.hp = resetGameData.hp;
+            Player.Instance.maxHP = resetGameData.maxHP;
+            Player.Instance.level = resetGameData.level;
+            Player.Instance.magic = resetGameData.magic;
+            Player.Instance.maxMagic = resetGameData.maxMagic;
+           */
+            isInitialized = true;           
         }
     }
 
@@ -257,11 +240,6 @@ public class GameManager : MonoBehaviour
     {
         gameData = resetGameData;
         StartCoroutine(WaitForLoad());
-        Player.Instance.hp = gameData.hp;
-        Player.Instance.maxHP = gameData.maxHP;
-        Player.Instance.level = gameData.level;
-        Player.Instance.magic = gameData.magic;
-        Player.Instance.maxMagic = gameData.maxMagic;
         SceneManager.LoadScene("Main");
     }
 

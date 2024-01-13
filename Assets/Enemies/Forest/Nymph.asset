@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Nymph
   m_EditorClassIdentifier: 
   index: 2
+  bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Nymph
   damage: 3

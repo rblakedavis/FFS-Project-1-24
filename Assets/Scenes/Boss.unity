@@ -1885,7 +1885,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1796160105}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewBattleManager, Assembly-CSharp
         m_MethodName: playerDefend
         m_Mode: 1
@@ -3386,7 +3386,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1796160105}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewBattleManager, Assembly-CSharp
         m_MethodName: playerAttack
         m_Mode: 1
@@ -3653,7 +3653,7 @@ GameObject:
   - component: {fileID: 1796160104}
   - component: {fileID: 1796160105}
   m_Layer: 0
-  m_Name: BattleManager
+  m_Name: BossBattleManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3683,14 +3683,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1796160102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 675b8b7070448e44685c95cb629c7302, type: 3}
+  m_Script: {fileID: 11500000, guid: fadc8a048a9df80478b1a59c58e3b3a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 0}
+  bossDeadDelay: 5
   healthBar: {fileID: 740655921}
   healthTMP: {fileID: 571719613}
   enemyHealthBar: {fileID: 1368468032}
-  showAndHideEnemyHealth: []
+  showAndHideEnemyHealth:
+  - {fileID: 835627540}
+  - {fileID: 1368468029}
+  - {fileID: 197487861}
   magicBar: {fileID: 535220892}
   magicTMP: {fileID: 836568966}
   battleText: {fileID: 290497412}
@@ -3922,7 +3926,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1796160105}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewBattleManager, Assembly-CSharp
         m_MethodName: playerRun
         m_Mode: 1

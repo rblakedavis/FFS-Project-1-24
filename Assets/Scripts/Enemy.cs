@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Enemy : ScriptableObject
 {
     public int index;
+    public int bossIndex;
 
     public Sprite sprite;
     public string enemyName;

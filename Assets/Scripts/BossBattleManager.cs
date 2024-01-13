@@ -4,9 +4,14 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-public class NewBattleManager : MonoBehaviour
+public class BossBattleManager : MonoBehaviour
 {
+
     public Enemy enemy;
+    private bool isEnemyDead = false
+        ;
+    [SerializeField]private float bossDeadDelay;
+    private float bossDeadElapsed = 0f;
 
     private Player player;
     [SerializeField] private Image healthBar;
@@ -45,7 +50,7 @@ public class NewBattleManager : MonoBehaviour
         battleText.text = string.Empty;
 
         //setup gamedata and player references
-        gameData = GameManager.Instance.gameData;
+        gameData = GameData.Instance;
         player = Player.Instance;
 
 
@@ -63,15 +68,10 @@ public class NewBattleManager : MonoBehaviour
             Debug.Log("ScreenShake script not found");
         }
 
-        //setup and create a new enemy
-        minRange = gameData.zoneOffset[gameData.curZoneIndex] - .4f;
-        Debug.Log("Min range is" + minRange);
-        maxRange = minRange + 2.4f; /* use a constant of 2.4 (because of the way range works) here... assumes ALL zones have 3 enemies*/
-        Debug.Log("Max range is" + maxRange);
 
         GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
 
-        enemy = CreateRandomEnemy(minRange, maxRange);
+        enemy = CreateBoss(gameData.curZoneIndex);
         if (enemy != null)
         {
            enemyCooldown = enemy.attacksPerSecond / 1f;
@@ -83,7 +83,7 @@ public class NewBattleManager : MonoBehaviour
         bool isInitialized = false;
         if (!isInitialized)
         {
-            battleText.text = $"{enemy.name} appeared!";
+            battleText.text = $"You foolishly challenge {enemy.name}...";
             isInitialized = true;
         }
 
@@ -109,11 +109,17 @@ public class NewBattleManager : MonoBehaviour
                 playerTakeDamage();
             }
 
+            //Think
+            //About
+            //Removing
+            //This
+            //Part
+            //Okay?
             if (enemy.damage <= 0 &&  enemyCooldown <= 1) 
             {
                 animator.SetBool("EnemyDead", false);
-                animator.SetInteger("EnemyIndex", enemy.index);
-                enemy.damage = gameData.enemyList[enemy.index].damage;
+                animator.SetInteger("BossIndex", enemy.bossIndex);
+                enemy.damage = gameData.bossList[enemy.bossIndex].damage;
                 battleText.text = $"{enemy.name} appeared!";
                 enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
                 for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
@@ -122,6 +128,15 @@ public class NewBattleManager : MonoBehaviour
                 }
 
             }
+        }
+        if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
+        {
+            bossDeadElapsed += Time.deltaTime;
+        }
+        if (bossDeadElapsed >= bossDeadDelay)
+        {
+            gameData.curZoneIndex++;
+            sceneChanger.ChangeScene("Main");
         }
     }
 
@@ -146,21 +161,14 @@ public class NewBattleManager : MonoBehaviour
         sceneChanger.ChangeScene("Main");
     }
 
-    private Enemy CreateRandomEnemy(float minRange, float maxRange)
+    private Enemy CreateBoss(int zoneIndex)
     {
-        int randomEnemy = (int)Mathf.Round(Random.Range(minRange, maxRange));
-
-        
-
-        Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
-
-        Debug.Log("enemy blueprint is "+ enemyBlueprint);
-        Debug.Log("random enemy is " + randomEnemy);
+        Enemy enemyBlueprint = gameData.bossList[zoneIndex];
         Enemy enemyCopy = ScriptableObject.Instantiate(enemyBlueprint);
         string originalName = enemyCopy.name;
         enemyCopy.name = originalName.Replace("(Clone)", "");
 
-        animator.SetInteger("EnemyIndex", randomEnemy); // 0 is a placeholder for further animations.
+        animator.SetInteger("BossIndex", zoneIndex); 
 
         return enemyCopy;
     }
@@ -209,8 +217,8 @@ public class NewBattleManager : MonoBehaviour
         animator.SetBool("EnemyDead", true);
         animator.SetInteger("EnemyIndex", -1);
         battleText.text = gameData.winQuotes[Random.Range(0, gameData.winQuotes.Length - 1)];
-        enemy = CreateRandomEnemy(minRange, maxRange);
-        enemy.damage = 0;
+        isEnemyDead = true;
+
     }
     
 

@@ -69,7 +69,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySpecificBossMusic(int zone)
     {
-        PlayMusic(bossMenuMusic[1]);
+        PlayMusic(bossMenuMusic[zone]);
     }
 
     public void PlayNonBossSceneSpecificMusic(string sceneName)

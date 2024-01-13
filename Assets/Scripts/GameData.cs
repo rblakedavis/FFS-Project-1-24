@@ -1,17 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]
-public class GameData : ScriptableObject
+public class GameData : MonoBehaviour
 {
 
     //public string curZoneName;
     public int curZoneIndex = 0;
-    public string[] zoneNames = {"Forest", "Cave", "Ruins", "Depths", "Underworld"};
-    
+    public string[] zoneNames = { "Forest", "Cave", "Ruins", "Depths", "Underworld" };
+
     //Placeholder for the number of available enemies
     //in the current zone.
-    public int zoneNumEnemies = 1; 
-   
+    public int zoneNumEnemies = 1;
+
     //Zone offset is equal to the cumulative number of
     //enemies that are available in all previous zones.
     public int[] zoneOffset = { 0, 3, 6, 9, 12 };
@@ -19,7 +18,8 @@ public class GameData : ScriptableObject
     public Sprite[] enemySprites;
 
     public Enemy[] enemyList;
-    
+    public Enemy[] bossList;
+
     public int curEnemy;
 
 
@@ -49,23 +49,9 @@ public class GameData : ScriptableObject
         20,    22,    24
     };
 
-    //Player stats    
-    public int level= 1; 
-
-    public float maxMagic = 2;
-    public float magic = 0;
-    public float magicRegen = 0.1f;
-
-
-    public float maxHP = 15;
-    public float hp = 15;
-    public float hpRegen = 0.15f;
-
     public int goldCur;
-    public float attack = 1;
-    public float defense = 0.2f;
 
-    public string subWindowText = "example text";    
+    public string subWindowText = "example text";
 
     //Game object names    
     public string enemyImageName = "BaddiesWindow";
@@ -87,4 +73,44 @@ public class GameData : ScriptableObject
 
     };
 
+
+    private static GameData _instance;
+    private bool isInitialized = false;
+
+    public static GameData Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameData>();
+                if (_instance == null)
+                {
+                    GameObject singleton = new GameObject(typeof(GameData).Name);
+                    _instance = singleton.AddComponent<GameData>();
+                }
+            }
+            return _instance;
+        }
+    }
+
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (GameManager.Instance != null)
+        {
+                if (_instance == null)
+                {
+                    _instance = this;
+                    DontDestroyOnLoad(gameObject);
+
+                    // Initialize game manager
+                    //blah blah blah...
+                    isInitialized = true;
+                }
+        }
+    }
 }
+
+

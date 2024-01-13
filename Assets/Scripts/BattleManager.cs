@@ -1,233 +1,116 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Events;
 
-public class NewBattleManager : MonoBehaviour
+public class GameData : MonoBehaviour
 {
-    public Enemy enemy;
 
-    private Player player;
-    [SerializeField] private Image healthBar;
-    [SerializeField] private TextMeshProUGUI healthTMP;
+    //public string curZoneName;
+    public int curZoneIndex = 0;
+    public string[] zoneNames = { "Forest", "Cave", "Ruins", "Depths", "Underworld" };
 
-    [SerializeField] private Image enemyHealthBar;
-    [SerializeField] private GameObject[] showAndHideEnemyHealth;
+    //Placeholder for the number of available enemies
+    //in the current zone.
+    public int zoneNumEnemies = 1;
 
-    [SerializeField] private Image magicBar;
-    [SerializeField] private TextMeshProUGUI magicTMP;
+    //Zone offset is equal to the cumulative number of
+    //enemies that are available in all previous zones.
+    public int[] zoneOffset = { 0, 3, 6, 9, 12 };
 
-    [SerializeField] private TextMeshProUGUI battleText;
-    [SerializeField] private GameObject screenFlash;
+    public Sprite[] enemySprites;
 
-    public float playerShield = 0;
-    public float maxShield;
+    public Enemy[] enemyList;
+    public Enemy[] bossList;
 
-    public Animator animator;
+    public int curEnemy;
 
-    //tools
-    public ScreenShake screenShake;
-    private GameData gameData;
-    public SceneChanger sceneChanger;
 
-    [SerializeField] float screenShakeDuration;
-    [SerializeField] float screenShakeMagnitude;
 
-    private float minRange;
-    private float maxRange;
+    public float[] enemyAttackValues =
+    {
+        2f,     3f,     1f,
+        3f,     5f,     5f,
+        8f,     10f,    11f,
+        14f,    16f,    17f,
+        20f,    22f,    24f
+    };
+    public float[] enemyMaxHealthValues =
+    {
+        15f,    12f,    40f,
+        20f,    20f,    25f,
+        35f,    35f,    40f,
+        50f,    56f,    57f,
+        80f,    99f,    95f
+    };
+    public int[] enemyExperienceValues =
+    {
+        2,     3,     1,
+        3,     5,     5,
+        8,     10,    11,
+        14,    16,    17,
+        20,    22,    24
+    };
 
-    private float enemyCooldown;
+    public int goldCur;
+
+    public string subWindowText = "example text";
+
+    //Game object names    
+    public string enemyImageName = "BaddiesWindow";
+
+    public string[] winQuotes =
+    {
+        "Enemy defeated. You lick off the blood on your weapon.",
+        "Victory achieved! The scent of triumph hangs in the air.",
+        "Foe vanquished. You wipe the sweat from your brow.",
+        "Enemy crushed. Your weapon gleams with the essence of conquest.",
+        "The adversary falls. Adrenaline courses through your veins.",
+        "Enemy Defeated! The echoes of battle fade.",
+        "Nuisance eliminated.A testament to your prowess.",
+        "Target neutralized. The taste of victory lingers the air.",
+        "Opponent overcome. Victory achieved.",
+        "Enemy eradicated. The shadows of conflict dissipate.",
+        "Adversary slain. Your weapon thirsts for more."
+
+
+    };
+
+
+    private static GameData _instance;
+    private bool isInitialized = false;
+
+    public static GameData Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameData>();
+                if (_instance == null)
+                {
+                    GameObject singleton = new GameObject(typeof(GameData).Name);
+                    _instance = singleton.AddComponent<GameData>();
+                }
+            }
+            return _instance;
+        }
+    }
+
 
     private void Awake()
     {
-        //clear the battle text window
-        battleText.text = string.Empty;
-
-        //setup gamedata and player references
-        gameData = GameManager.Instance.gameData;
-        player = Player.Instance;
-
-
-        //setup player shield, health, magic
-        maxShield = player.hp / (2 + (player.level / 5));
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
-        healthBar.fillAmount = player.hp / player.maxHP;
-        magicTMP.text = Mathf.Floor(player.magic).ToString();
-        magicBar.fillAmount = player.magic / player.maxMagic;
-
-        //setup Screen effects
-        screenShake = Camera.main.GetComponent<ScreenShake>();
-        if (screenShake == null)
+        DontDestroyOnLoad(gameObject);
+        if (GameManager.Instance != null)
         {
-            Debug.Log("ScreenShake script not found");
-        }
-
-        //setup and create a new enemy
-        minRange = gameData.zoneOffset[gameData.curZoneIndex] - .4f;
-        Debug.Log("Min range is" + minRange);
-        maxRange = minRange + 2.4f; /* use a constant of 2.4 (because of the way range works) here... assumes ALL zones have 3 enemies*/
-        Debug.Log("Max range is" + maxRange);
-
-        GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
-
-        enemy = CreateRandomEnemy(minRange, maxRange);
-        if (enemy != null)
-        {
-           enemyCooldown = enemy.attacksPerSecond / 1f;
-        }
-    }
-
-    private void Start()
-    {
-        bool isInitialized = false;
-        if (!isInitialized)
-        {
-            battleText.text = $"{enemy.name} appeared!";
-            isInitialized = true;
-        }
-
-        //call the battle method
-    }
-
-    private void Update()
-    {
-        if (enemy != null)
-        {
-            if (enemy.curHealth <= 0)
-            {
-                enemyCooldown = 2.5f;
-                EnemyDead();
-            }
-            else if (enemyCooldown >= 0)
-            {
-                enemyCooldown -= Time.deltaTime;
-            }
-            else if (enemyCooldown < 0)
-            {
-                enemyCooldown = enemy.attacksPerSecond / 1f;
-                playerTakeDamage();
-            }
-
-            if (enemy.damage <= 0 &&  enemyCooldown <= 1) 
-            {
-                animator.SetBool("EnemyDead", false);
-                animator.SetInteger("EnemyIndex", enemy.index);
-                enemy.damage = gameData.enemyList[enemy.index].damage;
-                battleText.text = $"{enemy.name} appeared!";
-                enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
-                for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
+                if (_instance == null)
                 {
-                    showAndHideEnemyHealth[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
+                    _instance = this;
+                    DontDestroyOnLoad(gameObject);
+
+                    // Initialize game manager
+                    //blah blah blah...
+                    isInitialized = true;
                 }
-
-            }
         }
     }
-
-    public void playerAttack()
-    {
-        if (enemy != null && enemy.damage > 0)
-        {
-            enemy.curHealth -= player.attack;
-            enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
-        }
-    }
-    public void playerDefend()
-    {
-        if (player != null && enemy != null)
-        {
-            playerShield += Player.Instance.defense;
-        }
-    }
-    public void playerRun()
-    {
-        gameData.subWindowText = "ran away...";
-        sceneChanger.ChangeScene("Main");
-    }
-
-    private Enemy CreateRandomEnemy(float minRange, float maxRange)
-    {
-        int randomEnemy = (int)Mathf.Round(Random.Range(minRange, maxRange));
-
-        
-
-        Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
-
-        Debug.Log("enemy blueprint is "+ enemyBlueprint);
-        Debug.Log("random enemy is " + randomEnemy);
-        Enemy enemyCopy = ScriptableObject.Instantiate(enemyBlueprint);
-        string originalName = enemyCopy.name;
-        enemyCopy.name = originalName.Replace("(Clone)", "");
-
-        animator.SetInteger("EnemyIndex", randomEnemy); // 0 is a placeholder for further animations.
-
-        return enemyCopy;
-    }
-
-    private void playerTakeDamage()
-    {
-        float trueDamage = enemy.damage + (enemy.damageModifier * (player.level - 1) / 2);
-        if (playerShield > trueDamage)
-        {
-            playerShield -= trueDamage;
-            //play a sound? show a shield graphic?
-            // decrease shield bar
-        }
-        else if (playerShield > 0 && playerShield  <= trueDamage)
-        {
-            float newDamage = trueDamage - playerShield;
-            player.hp -= newDamage;
-            playerShield = 0;
-            //play a shield break sound? / graphic?
-        }
-        else if (playerShield <= 0)
-        {
-            player.hp -= trueDamage;
-
-            Quaternion quaternion = new Quaternion();
-            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
-            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
-            screenFlash.transform.rotation = quaternion;
-            screenFlash.transform.localScale = new Vector3(850, 850, 850);
-            StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
-
-            healthTMP.text = Mathf.Floor(player.hp).ToString();
-            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.name}";
-            healthBar.fillAmount = player.hp / player.maxHP;
-        }
-    }
-
-    public void EnemyDead()
-    {
-        Player.Instance.experience += enemy.expWorth;
-        Destroy(enemy); enemy = null;
-        for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
-        {
-            showAndHideEnemyHealth[i].GetComponent<Image>().color -= new Color(0, 0, 0, 1);
-        }
-        animator.SetBool("EnemyDead", true);
-        animator.SetInteger("EnemyIndex", -1);
-        battleText.text = gameData.winQuotes[Random.Range(0, gameData.winQuotes.Length - 1)];
-        enemy = CreateRandomEnemy(minRange, maxRange);
-        enemy.damage = 0;
-    }
-    
-
-    public void OnLevelUp()
-    {
-        enemyCooldown = 5f;
-        battleText.text = $"Level up! You are now level {Player.Instance.level}! " +
-                $"hp and magic restored. " +
-                $"attack and defense up! " +
-                $"Enemies will also be stronger...";
-        player.hp = player.maxHP;
-        player.magic = player.maxMagic;
-        healthBar.fillAmount = player.hp / player.maxHP;
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
-
-
-        return;
-    }
-
 }
+
+

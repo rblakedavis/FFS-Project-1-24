@@ -50,6 +50,7 @@ public class GameData : MonoBehaviour
     };
 
     public int goldCur;
+    public int attack = 1;
 
     public string subWindowText = "example text";
 

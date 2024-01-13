@@ -1,126 +1,116 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.SceneManagement;
 
-public class BattleManager : MonoBehaviour
+public class GameData : MonoBehaviour
 {
-    public Enemy enemy;
-    private Player player;
-    [SerializeField] private Image healthBar;
-    [SerializeField] private Image enemyHealthBar;
-    [SerializeField] private TextMeshProUGUI healthTMP;
 
-    [SerializeField] private Image magicBar;
-    [SerializeField] private TextMeshProUGUI magicTMP;
+    //public string curZoneName;
+    public int curZoneIndex = 0;
+    public string[] zoneNames = { "Forest", "Cave", "Ruins", "Depths", "Underworld" };
 
-    [SerializeField] private TextMeshProUGUI battleText;
-    [SerializeField] private GameObject screenFlash;
+    //Placeholder for the number of available enemies
+    //in the current zone.
+    public int zoneNumEnemies = 1;
 
-    public Animator animator;
+    //Zone offset is equal to the cumulative number of
+    //enemies that are available in all previous zones.
+    public int[] zoneOffset = { 0, 3, 6, 9, 12 };
 
-    public ScreenShake screenShake;
-    private GameData gameData;
-    public SceneChanger sceneChanger;
+    public Sprite[] enemySprites;
 
-    [SerializeField] float screenShakeDuration;
-    [SerializeField] float screenShakeMagnitude;
-   // [SerializeField] Color screenFlashColor;
-   // [SerializeField] float screenFlashDuration;
+    public Enemy[] enemyList;
+    public Enemy[] bossList;
+
+    public int curEnemy;
 
 
 
-    void Awake()
+    public float[] enemyAttackValues =
     {
+        2f,     3f,     1f,
+        3f,     5f,     5f,
+        8f,     10f,    11f,
+        14f,    16f,    17f,
+        20f,    22f,    24f
+    };
+    public float[] enemyMaxHealthValues =
+    {
+        15f,    12f,    40f,
+        20f,    20f,    25f,
+        35f,    35f,    40f,
+        50f,    56f,    57f,
+        80f,    99f,    95f
+    };
+    public int[] enemyExperienceValues =
+    {
+        2,     3,     1,
+        3,     5,     5,
+        8,     10,    11,
+        14,    16,    17,
+        20,    22,    24
+    };
 
-        battleText.text = string.Empty;
+    public int goldCur;
 
-        gameData = GameManager.Instance.gameData;
+    public string subWindowText = "example text";
 
-        player = Player.Instance;
-        healthTMP.text = player.hp.ToString();
+    //Game object names    
+    public string enemyImageName = "BaddiesWindow";
+
+    public string[] winQuotes =
+    {
+        "Enemy defeated. You lick off the blood on your weapon.",
+        "Victory achieved! The scent of triumph hangs in the air.",
+        "Foe vanquished. You wipe the sweat from your brow.",
+        "Enemy crushed. Your weapon gleams with the essence of conquest.",
+        "The adversary falls. Adrenaline courses through your veins.",
+        "Enemy Defeated! The echoes of battle fade.",
+        "Nuisance eliminated.A testament to your prowess.",
+        "Target neutralized. The taste of victory lingers the air.",
+        "Opponent overcome. Victory achieved.",
+        "Enemy eradicated. The shadows of conflict dissipate.",
+        "Adversary slain. Your weapon thirsts for more."
 
 
+    };
 
-        screenShake = Camera.main.GetComponent<ScreenShake>();
-        if (screenShake == null)
+
+    private static GameData _instance;
+    private bool isInitialized = false;
+
+    public static GameData Instance
+    {
+        get
         {
-            Debug.LogError("ScreenShake script not found");
-        }
-        healthBar.fillAmount = player.hp / player.maxHP;
-
-    }
-
-    void Start()
-    {
-        StartCoroutine(BattleCoroutine());
-        enemy.health = 15;
-        enemy.curHealth = 15;
-
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public void playerAttack()
-    {
-        if (player != null && enemy != null)
-        {
-            enemy.curHealth -= player.attack;
-            enemyHealthBar.fillAmount = enemy.curHealth / enemy.health;
-        }
-    }
-
-    public void playerRun()
-    {
-        gameData.subWindowText = "ran away...";
-        sceneChanger.ChangeScene("Main");
-    }
-
-    public void EnemyDead() 
-    {
-        gameData.subWindowText = "Enemy defeated. You lick off the blood on your weapon.";
-        sceneChanger.ChangeScene("Main");
-    }
-
-    public void playerHeal()
-    {
-        player.hp += player.healAmount;
-        player.magic -= 2;
-    }
-
-
-
-    private IEnumerator BattleCoroutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f / enemy.attacksPerSecond);
-            player.hp -= enemy.damage;
-            player.hp = Mathf.RoundToInt(player.hp);
-            Quaternion quaternion = new Quaternion();
-            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
-            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
-
-            screenFlash.transform.rotation = quaternion;
-            screenFlash.transform.localScale = new Vector3(850, 850, 850);
-
-
-
-            if (screenShake != null)
+            if (_instance == null)
             {
-                StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
+                _instance = FindObjectOfType<GameData>();
+                if (_instance == null)
+                {
+                    GameObject singleton = new GameObject(typeof(GameData).Name);
+                    _instance = singleton.AddComponent<GameData>();
+                }
             }
+            return _instance;
+        }
+    }
 
-            healthTMP.text = player.hp.ToString();
 
-            Debug.Log("Player Health is " + player.hp);
-            battleText.text = "You took " + enemy.damage + " damage from " + enemy.enemyName;
-            healthBar.fillAmount = player.hp / player.maxHP;
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (GameManager.Instance != null)
+        {
+                if (_instance == null)
+                {
+                    _instance = this;
+                    DontDestroyOnLoad(gameObject);
+
+                    // Initialize game manager
+                    //blah blah blah...
+                    isInitialized = true;
+                }
         }
     }
 }
+
+

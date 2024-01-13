@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 
 public class GameManager : MonoBehaviour
@@ -13,15 +14,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI level;
     [SerializeField] private TextMeshProUGUI magic;
     [SerializeField] private TextMeshProUGUI health;
-    [SerializeField] private TextMeshProUGUI subWindow;
+    [SerializeField] public TextMeshProUGUI subWindow;
 
     [SerializeField] private Image healthBar;
+    private float regenCooldown = .5f;
+    private float timeSinceRegen = 0f;
     [SerializeField] private Image magicBar;
+    private bool isMainMenuMusicPlaying = true;
 
-    private static GameData resetGameData;
+    [SerializeField]private GameData resetGameData;
+
+    public UnityEvent onLevelUp;
+    public int bossRequiredLevel;
 
     private static GameManager _instance;
     private bool isInitialized = false;
+    
 
     public static GameManager Instance
     {
@@ -45,7 +53,10 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
+        if (Player.Instance != null)
+        {
+            bossRequiredLevel = (1 + GameData.Instance.curZoneIndex) * 5;
+        }
 
         StartCoroutine(WaitForLoad());
 
@@ -67,8 +78,8 @@ public class GameManager : MonoBehaviour
                         subWindow.text = gameData.subWindowText;
                         zone.text = gameData.zoneNames[gameData.curZoneIndex];
                         level.text = Player.Instance.level.ToString();
-                        magic.text = Player.Instance.magic.ToString();
-                        health.text = Player.Instance.hp.ToString();
+                        magic.text = Mathf.Floor(Player.Instance.magic).ToString();
+                        health.text = Mathf.Floor(Player.Instance.hp).ToString();
                         healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
                         magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
                     }
@@ -78,20 +89,6 @@ public class GameManager : MonoBehaviour
 
 
         }
-
-            SetAspectRatio();
-
-        if (resetGameData == null) 
-        {
-            resetGameData = ScriptableObject.CreateInstance<GameData>();
-            resetGameData.enemyList = gameData.enemyList;
-            resetGameData.enemySprites = gameData.enemySprites;
-
-            DontDestroyOnLoad(resetGameData);
-        }
-
-
-
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -102,102 +99,139 @@ public class GameManager : MonoBehaviour
         Debug.Log("Destroyed");
     }
 
-    private void Start()
+    private void OnEnable()
     {
         if (!isInitialized && SceneManager.GetActiveScene().name == "Main")
         {
-            Debug.Log("Start");
-
+            gameData = GameData.Instance;
+            
             gameData.subWindowText = "Welcome to the game.";
             subWindow.text = gameData.subWindowText;
             zone.text = gameData.zoneNames[gameData.curZoneIndex];
             level.text = Player.Instance.level.ToString();
-            magic.text = Player.Instance.magic.ToString();
-            health.text = Player.Instance.hp.ToString();
-            isInitialized = true;
-            
+            magic.text = Mathf.Floor(Player.Instance.magic).ToString();
+            health.text = Mathf.Floor(Player.Instance.hp).ToString();
+
+           /* Player.Instance.hp = resetGameData.hp;
+            Player.Instance.maxHP = resetGameData.maxHP;
+            Player.Instance.level = resetGameData.level;
+            Player.Instance.magic = resetGameData.magic;
+            Player.Instance.maxMagic = resetGameData.maxMagic;
+           */
+            isInitialized = true;           
         }
     }
 
+    #region Handle scene loads
     private void OnSceneLoaded(Scene scene2, LoadSceneMode mode)
     {
-        Debug.Log("Scene Loaded");
         Scene scene = SceneManager.GetActiveScene();
-        Debug.Log("Active scene is " + scene.name);
         switch (scene.name)
         {
+            case "Main":
+                //if main music is already playing => Don't reset
+                if (!isMainMenuMusicPlaying)
+                {
+                    AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
+                    isMainMenuMusicPlaying = false;
+                }
+                break;
             case "Grind":
-                GameObject enemyWindow = GameObject.Find(gameData.enemyImageName);
-                Debug.Log("Entered Grind Case");
-
-                if (enemyWindow != null)
-                {
-                    Animator enemySprite = enemyWindow.GetComponent<Animator>();
-                    if (enemySprite == null) Debug.LogError("Enemy sprite null! " + enemySprite);
-                    if (enemyWindow == null) Debug.LogError("Enemy window null! " + enemyWindow);
-
-                    if (enemySprite != null && gameData.enemySprites.Length > 0)
-                    {
-                        int enemyIndex = Random.Range(0, gameData.zoneNumEnemies-1);
-                        Debug.Log("enemyIndex is " + enemyIndex);
-                        enemySprite.SetInteger("EnemyIndex", enemyIndex);
-                        Debug.Log("Enemy sprite changed successfully.");
-                    }
-                    else
-                    {
-                        Debug.Log("Enemy Window " + enemySprite);
-                        Debug.Log("Enemy sprite array count " + gameData.enemySprites.Length);
-
-
-                        Debug.LogError("Image component or sprite array not found.");
-                        
-
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Enemy Window not found.");
-                }
+                AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
+                isMainMenuMusicPlaying = false;
                 break;
                         
             case "Loot":
 
                 break;
+
             case "Shop":
 
                 break;
             case "Boss":
-
+                AudioManager.Instance.PlaySpecificBossMusic(gameData.curZoneIndex);
+                isMainMenuMusicPlaying = false;
                 break;
 
             case "GameOver":
-
+                AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
+                isMainMenuMusicPlaying = false;
                 break;
-
-
-
         }
         // Update any pertinent variables here
     }
+    #endregion
 
     // Update is called once per frame
     void Update()
     {
+        if (regenCooldown > timeSinceRegen)
+        {
+            timeSinceRegen += Time.deltaTime;
+        }
+        if (timeSinceRegen > regenCooldown && Player.Instance.hp < Player.Instance.maxHP) 
+        {
+            Player.Instance.hp += Player.Instance.hpRegen;
+            timeSinceRegen = 0;
+            if (SceneManager.GetActiveScene().name == "Main")
+            {
+                healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+                health.text = Mathf.Floor(Player.Instance.hp).ToString();
+            }
+
+        }
+        
+        if (timeSinceRegen > regenCooldown && Player.Instance.magic < Player.Instance.maxMagic)
+        {
+            Player.Instance.magic += Player.Instance.magicRegen;
+            timeSinceRegen = 0;
+            if (SceneManager.GetActiveScene().name == "Main")
+            {
+                magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+                magic.text = Mathf.Floor(Player.Instance.magic).ToString();
+                
+            }
+
+        }
+
         string activeScene = SceneManager.GetActiveScene().name;
-        if (Player.Instance.hp <= 0 &&  activeScene != "GameOver") 
+        if (Player.Instance.hp <= 0 && activeScene != "GameOver")
         {
             StartCoroutine(WaitForLoad());
             if (Player.Instance.hp > 0) return;
             SceneManager.LoadScene("GameOver");
         }
+
+        if (Player.Instance.experience >= Player.Instance.expNextLevel)
+        {
+            //insert some shoddy math for an experience curve
+            Player.Instance.expNextLevel = (int)Mathf.Ceil(Player.Instance.experience * 1.4f * Player.Instance.level);
+            Player.Instance.level++;
+
+            foreach (var kvp in Player.Instance.levelUp)
+            {
+                string statName = kvp.Key;
+                float statIncrease = kvp.Value;
+
+                UpdateStat(statName, statIncrease);
+            }
+            bossRequiredLevel = (1 + gameData.curZoneIndex) * 5;
+            GameManager.Instance.onLevelUp.Invoke();
+        }
+        if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != gameData.subWindowText)
+        {
+            subWindow.text = gameData.subWindowText;
+
+        }
     }
 
-    private void SetAspectRatio()
-    {
-        Camera.main.aspect = 4f / 3f;
-    }
 
-    private IEnumerator WaitForLoad() 
+        /*private void SetAspectRatio()
+        {
+            Camera.main.aspect = 4f / 3f;
+        }*/
+
+        private IEnumerator WaitForLoad() 
     {
         yield return null;
     }
@@ -206,11 +240,23 @@ public class GameManager : MonoBehaviour
     {
         gameData = resetGameData;
         StartCoroutine(WaitForLoad());
-        Player.Instance.hp = gameData.hp;
-        Player.Instance.maxHP = gameData.maxHP;
-        Player.Instance.level = gameData.level;
-        Player.Instance.magic = gameData.magic;
-        Player.Instance.maxMagic = gameData.maxMagic;
         SceneManager.LoadScene("Main");
+    }
+
+    private void UpdateStat(string statName, float statIncrease)
+    {
+        var field = typeof(Player).GetField(statName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (field != null)
+        {
+            // Cast the result to float
+            float currentValue = (float)field.GetValue(Player.Instance);
+            float newValue = currentValue + statIncrease;
+            field.SetValue(Player.Instance, newValue);
+        }
+        else
+        {
+            Debug.Log($"{statName} is not a valid field.");
+        }
+
     }
 }

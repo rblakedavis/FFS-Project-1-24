@@ -18,36 +18,62 @@ public class TooltipHandler : MonoBehaviour
 
     private void Start()
     {
-            gameData = GameManager.Instance.gameData;
+            gameData = GameData.Instance;
     }
 
 public void OnMouseEnter()
     {
+        Debug.Log("mouse enter");
         
         string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip };
-        if (!excludedTooltips.Contains(gameData.subWindowText))        
+
+
+
+
+        if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text)) 
         {
-            tempString = gameData.subWindowText;
+            tempString = GameManager.Instance.subWindow.text;
         }
+
+
         switch(this.name)
         {
-            case "GrindBtn":
-
-                break;
-
             case "BossBtn":
+                int playerRequiredLevel = GameManager.Instance.bossRequiredLevel;
+                if (Player.Instance.level < playerRequiredLevel)
+                {
+                    bossTooltip = $"You must be level {playerRequiredLevel} to fight this zone\"s boss";
+                }
+                else
+                {
+                    bossTooltip = "Fight this zone\"s boss" +
+                    "No running from boss battles";
+                }
+                if (gameData.subWindowText != bossTooltip)
+                {
+                    tempString = GameManager.Instance.subWindow.text;
+                }
+                gameData.subWindowText = bossTooltip;
+                Debug.Log(gameData.subWindowText);
+
+
+                if (coroutine != null)
+                {
+                    StopCoroutine(coroutine);
+                }
 
                 break;
-
-            case "ShopBtn":
-
-                shopTooltip = "Current Gold = " + gameData.goldCur;
-                if (gameData.subWindowText != shopTooltip)
+            case "GrindBtn":
+                grindTooltip = "Fight monsters to level up";
+                if (gameData.subWindowText != grindTooltip)
                 {
                     tempString = gameData.subWindowText;
                 }
-                gameData.subWindowText = shopTooltip;
-                if (coroutine != null )
+                gameData.subWindowText = grindTooltip;
+                Debug.Log(gameData.subWindowText);
+
+
+                if (coroutine != null)
                 {
                     StopCoroutine(coroutine);
                 }
@@ -55,8 +81,44 @@ public void OnMouseEnter()
                 break;
 
             case "LootBtn":
+                lootTooltip = "Loot to gain gold";
+                if (gameData.subWindowText != lootTooltip)
+                {
+                    tempString = gameData.subWindowText;
+                }
+                gameData.subWindowText = lootTooltip;
+
+
+                if (coroutine != null)
+                {
+                    StopCoroutine(coroutine);
+                }
 
                 break;
+
+            case "ShopBtn":
+
+                
+                shopTooltip = "Current Gold = " + gameData.goldCur;
+                if (gameData.subWindowText != shopTooltip)
+                {
+                    tempString = gameData.subWindowText;
+                }                
+                gameData.subWindowText = shopTooltip;
+
+
+                if (coroutine != null )
+                {
+                    StopCoroutine(coroutine);
+                }
+
+                break;
+
+
+            default:
+                Debug.Log($"{this.name} not found in tooltips!");
+                break;
+            
         }
     }
 

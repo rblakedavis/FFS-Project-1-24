@@ -1,9 +1,9 @@
 
 using UnityEngine;
 
+
 public class GameOverMenuManager : MonoBehaviour
 {
-    [SerializeField] private SceneChanger sceneChanger;
 
     public void startAgain()
     {
@@ -13,5 +13,17 @@ public class GameOverMenuManager : MonoBehaviour
     public void quitGame()
     {
         Application.Quit();
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            quitGame();
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            startAgain();
+        }
     }
 }

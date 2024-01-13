@@ -1,21 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
-[CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]
-public class GameData : ScriptableObject
+public class GameData : MonoBehaviour
 {
 
     //public string curZoneName;
     public int curZoneIndex = 0;
-    public string[] zoneNames = {"Forest", "Cave", "Ruins", "Depths", "Underworld"};
-    
+    public string[] zoneNames = { "Forest", "Cave", "Ruins", "Depths", "Underworld" };
+
     //Placeholder for the number of available enemies
     //in the current zone.
-    public int zoneNumEnemies = 1; 
-   
+    public int zoneNumEnemies = 1;
+
     //Zone offset is equal to the cumulative number of
     //enemies that are available in all previous zones.
     public int[] zoneOffset = { 0, 3, 6, 9, 12 };
@@ -23,17 +18,12 @@ public class GameData : ScriptableObject
     public Sprite[] enemySprites;
 
     public Enemy[] enemyList;
-    
+    public Enemy[] bossList;
+
     public int curEnemy;
 
-    public string[] enemyNames = 
-    {
-        "wolf",     "forest2",  "forest3", 
-        "cave1",    "cave2",    "cave3",
-        "ruins1",   "ruins2",  "ruins3",
-        "depths1",   "depths2",     "depths3",
-        "underworld1",  "underworld2",  "underworld3"
-    };
+
+
     public float[] enemyAttackValues =
     {
         2f,     3f,     1f,
@@ -59,18 +49,69 @@ public class GameData : ScriptableObject
         20,    22,    24
     };
 
-    //Player stats    
-    public int level= 1;
-    public int maxMagic = 2;
-    public int magic = 0;
-    public int maxHP= 15;
-    public int hp = 15;
     public int goldCur;
     public int attack = 1;
 
-    public string subWindowText = "example text";    
+    public string subWindowText = "example text";
 
     //Game object names    
     public string enemyImageName = "BaddiesWindow";
 
+    public string[] winQuotes =
+    {
+        "Enemy defeated. You lick off the blood on your weapon.",
+        "Victory achieved! The scent of triumph hangs in the air.",
+        "Foe vanquished. You wipe the sweat from your brow.",
+        "Enemy crushed. Your weapon gleams with the essence of conquest.",
+        "The adversary falls. Adrenaline courses through your veins.",
+        "Enemy Defeated! The echoes of battle fade.",
+        "Nuisance eliminated.A testament to your prowess.",
+        "Target neutralized. The taste of victory lingers the air.",
+        "Opponent overcome. Victory achieved.",
+        "Enemy eradicated. The shadows of conflict dissipate.",
+        "Adversary slain. Your weapon thirsts for more."
+
+
+    };
+
+
+    private static GameData _instance;
+    private bool isInitialized = false;
+
+    public static GameData Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameData>();
+                if (_instance == null)
+                {
+                    GameObject singleton = new GameObject(typeof(GameData).Name);
+                    _instance = singleton.AddComponent<GameData>();
+                }
+            }
+            return _instance;
+        }
+    }
+
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (GameManager.Instance != null)
+        {
+                if (_instance == null)
+                {
+                    _instance = this;
+                    DontDestroyOnLoad(gameObject);
+
+                    // Initialize game manager
+                    //blah blah blah...
+                    isInitialized = true;
+                }
+        }
+    }
 }
+
+

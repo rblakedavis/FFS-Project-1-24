@@ -9,6 +9,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] List<Item> items = new List<Item>();
     [SerializeField] Transform content;
     [SerializeField] GameObject buttonPrefab;
+    [SerializeField] ShopTooltipHandler tooltipHandler;
 
     private void Awake()
     {
@@ -39,6 +40,11 @@ public class ShopManager : MonoBehaviour
                 {
                     buttonText.text = item.itemName;
                 }
+
+                GameObject itemObject = new GameObject(item.itemName);
+                itemObject.transform.SetParent(button.transform);
+                ItemContainer itemContainer = itemObject.AddComponent<ItemContainer>();
+                itemContainer.item = item;
             }
         }
     }

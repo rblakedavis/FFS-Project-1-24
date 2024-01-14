@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   bossIndex: -1
-  sprite: {fileID: 21300000, guid: 24d1f2e96d52caf44be471bcd55c7048, type: 3}
+  sprite: {fileID: 0}
   enemyName: Slime
   damage: 1
   damageModifier: 0.5
-  maxHealth: 15
-  curHealth: 15
+  maxHealth: 25
+  curHealth: 25
   expWorth: 1
-  attacksPerSecond: 0.8
+  secondsBetweenAttacks: 1.5

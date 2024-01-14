@@ -10,14 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: Item
+  m_Name: SuperFruit
   m_EditorClassIdentifier: 
-  typeOfItem: 
+  itemName: Super Fruit
+  typeOfItem: Consumable
   addsToPlayerAttack: 0
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
-  restoresPlayerMagic: 0
+  restoresPlayerMagic: 999999
   addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
-  restoresPlayerHealth: 0
+  restoresPlayerHealth: 999999
   addsToPlayerHealthRegen: 0
+  cost: 300
+  description: Fully restores health and magic
+  minLevelAvailable: 3
+  minZoneAvailable: 0

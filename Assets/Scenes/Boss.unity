@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 2695218}
   m_Layer: 5
   m_Name: BackgroundBorder
-  m_TagString: Untagged
+  m_TagString: MenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1328,6 +1328,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571719611}
   m_CullTransparentMesh: 1
+--- !u!1 &671277503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 671277505}
+  - component: {fileID: 671277504}
+  m_Layer: 0
+  m_Name: ZoneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &671277504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671277503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55febfa01a3eec74991295fea7449a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuGraphic:
+  - {fileID: 21300000, guid: 381b3544c99ccd74da738c0b05e4651a, type: 3}
+  - {fileID: 21300000, guid: 1b3bd1e44ed37ca46ad89dd87d34fc01, type: 3}
+  - {fileID: 21300000, guid: 9a2acbf8babf5e74fae175a42fae20d6, type: 3}
+  - {fileID: 21300000, guid: f50d4b1a375bd934bb7a77da5df33601, type: 3}
+  - {fileID: 21300000, guid: 71df31ddb5dc2a74eba5ea8ef391b153, type: 3}
+  subMenuGraphic:
+  - {fileID: 21300000, guid: 8ccbae375f618034094d8a57d892730c, type: 3}
+  - {fileID: 21300000, guid: 0aab285cde3250c4f884d7bc4f89f53e, type: 3}
+  - {fileID: 21300000, guid: ed8948f0c5bbce64690585aa2a269e8a, type: 3}
+  - {fileID: 21300000, guid: c7fa8dd05a561104faeb481f41454422, type: 3}
+  - {fileID: 21300000, guid: cb036388923f191408f6892c960436f6, type: 3}
+  upArrowButton:
+  - {fileID: 21300000, guid: bbe1baacfe71d8648bcd1246fe756946, type: 3}
+  - {fileID: 21300000, guid: 32c75f32acb90f74e80564a396e639ae, type: 3}
+  - {fileID: 21300000, guid: 5eb68828ceea8f1498a9164687ac41e6, type: 3}
+  - {fileID: 21300000, guid: 2780ef85097713943ab307fa66505c81, type: 3}
+  - {fileID: 21300000, guid: bf47bf8aa2180704d8fddf96c0d426eb, type: 3}
+  downArrowButton:
+  - {fileID: 21300000, guid: 0151c4f13bacf6a49b007f240989f0b7, type: 3}
+  - {fileID: 21300000, guid: a149ac9fe131ef8478bb1f06349ea1be, type: 3}
+  - {fileID: 21300000, guid: b20a9c8b841a7ff4ea47ddb5a2fc5179, type: 3}
+  - {fileID: 21300000, guid: af494b1a14cea6a45afe0558c876ab1c, type: 3}
+  - {fileID: 21300000, guid: ec710163dfe153a4e825128301df286f, type: 3}
+--- !u!4 &671277505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671277503}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 619.3639, y: 436.61346, z: -231.8404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &740655919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,7 +1693,7 @@ GameObject:
   - component: {fileID: 851698911}
   m_Layer: 5
   m_Name: HUDWindow
-  m_TagString: Untagged
+  m_TagString: SubMenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1816,7 +1884,7 @@ GameObject:
   - component: {fileID: 903597426}
   m_Layer: 5
   m_Name: DefendBtn
-  m_TagString: Untagged
+  m_TagString: SubMenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2217,7 +2285,7 @@ GameObject:
   - component: {fileID: 1031317173}
   m_Layer: 5
   m_Name: NotifWindow
-  m_TagString: Untagged
+  m_TagString: SubMenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3010,7 +3078,7 @@ GameObject:
   - component: {fileID: 1328810711}
   m_Layer: 5
   m_Name: MainWindow
-  m_TagString: Untagged
+  m_TagString: MenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3317,7 +3385,7 @@ GameObject:
   - component: {fileID: 1505117025}
   m_Layer: 5
   m_Name: AttackBtn
-  m_TagString: Untagged
+  m_TagString: SubMenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3856,7 +3924,7 @@ GameObject:
   - component: {fileID: 1971855101}
   m_Layer: 5
   m_Name: RunBtn
-  m_TagString: Untagged
+  m_TagString: SubMenuObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4058,3 +4126,4 @@ SceneRoots:
   - {fileID: 324704180}
   - {fileID: 1778373337}
   - {fileID: 1796160104}
+  - {fileID: 671277505}

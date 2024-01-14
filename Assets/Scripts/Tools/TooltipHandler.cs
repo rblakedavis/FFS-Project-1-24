@@ -23,7 +23,6 @@ public class TooltipHandler : MonoBehaviour
 
 public void OnMouseEnter()
     {
-        Debug.Log("mouse enter");
         
         string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip };
 
@@ -54,7 +53,6 @@ public void OnMouseEnter()
                     tempString = GameManager.Instance.subWindow.text;
                 }
                 gameData.subWindowText = bossTooltip;
-                Debug.Log(gameData.subWindowText);
 
 
                 if (coroutine != null)
@@ -70,7 +68,6 @@ public void OnMouseEnter()
                     tempString = gameData.subWindowText;
                 }
                 gameData.subWindowText = grindTooltip;
-                Debug.Log(gameData.subWindowText);
 
 
                 if (coroutine != null)

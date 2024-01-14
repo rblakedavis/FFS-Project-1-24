@@ -8,8 +8,9 @@ public class BossBattleManager : MonoBehaviour
 {
 
     public Enemy enemy;
-    private bool isEnemyDead = false
-        ;
+    private bool isEnemyDead = false;
+    private bool playerHasChangedZones = false;
+
     [SerializeField]private float bossDeadDelay;
     private float bossDeadElapsed = 0f;
 
@@ -69,12 +70,12 @@ public class BossBattleManager : MonoBehaviour
         }
 
 
-        GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
+        //GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
 
         enemy = CreateBoss(gameData.curZoneIndex);
         if (enemy != null)
         {
-           enemyCooldown = enemy.attacksPerSecond / 1f;
+           enemyCooldown = enemy.secondsBetweenAttacks / 1f;
         }
     }
 
@@ -105,7 +106,7 @@ public class BossBattleManager : MonoBehaviour
             }
             else if (enemyCooldown < 0)
             {
-                enemyCooldown = enemy.attacksPerSecond / 1f;
+                enemyCooldown = enemy.secondsBetweenAttacks / 1f;
                 playerTakeDamage();
             }
 
@@ -115,27 +116,21 @@ public class BossBattleManager : MonoBehaviour
             //This
             //Part
             //Okay?
-            if (enemy.damage <= 0 &&  enemyCooldown <= 1) 
-            {
-                animator.SetBool("EnemyDead", false);
-                animator.SetInteger("BossIndex", enemy.bossIndex);
-                enemy.damage = gameData.bossList[enemy.bossIndex].damage;
-                battleText.text = $"{enemy.name} appeared!";
-                enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
-                for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
-                {
-                    showAndHideEnemyHealth[i].GetComponent<Image>().color += new Color(0, 0, 0, 1);
-                }
-
-            }
         }
         if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
         {
             bossDeadElapsed += Time.deltaTime;
         }
+        if (bossDeadElapsed >= bossDeadDelay/2 && !playerHasChangedZones)
+        {
+            battleText.text = $"Left {gameData.zoneNames[gameData.curZoneIndex]}\n";
+            gameData.curZoneIndex++;
+            //if curZoneIndex >= 4{}....
+            battleText.text += $"Moving to {gameData.zoneNames[gameData.curZoneIndex]}";
+            playerHasChangedZones = true;
+        }
         if (bossDeadElapsed >= bossDeadDelay)
         {
-            gameData.curZoneIndex++;
             sceneChanger.ChangeScene("Main");
         }
     }
@@ -222,6 +217,7 @@ public class BossBattleManager : MonoBehaviour
     }
     
 
+    /*
     public void OnLevelUp()
     {
         enemyCooldown = 5f;
@@ -237,5 +233,6 @@ public class BossBattleManager : MonoBehaviour
 
         return;
     }
+    */
 
 }

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using TMPro;
 using UnityEngine;
 
@@ -11,13 +10,15 @@ public class LootManager : MonoBehaviour
     [SerializeField] private float minGoldMultiplier;
     [SerializeField] private float maxGoldMultiplier;
     [SerializeField] private float lootCooldown = .25f;
+    [SerializeField] private Animator animator;
     private float timeSinceLastLoot = .25f;
+
 
 
     // Start is called before the first frame update
     private void Awake()
     {
-        gameData = GameManager.Instance.gameData;
+        gameData = GameData.Instance;
     }
     void Start()
     {
@@ -46,6 +47,11 @@ public class LootManager : MonoBehaviour
             timeSinceLastLoot = 0f;
             
         }
+
+    }
+
+    public void BackButtonPressed()
+    {
 
     }
 

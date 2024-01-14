@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
   m_Name: WoodStick
   m_EditorClassIdentifier: 
+  itemName: WoodStick
   typeOfItem: Weapon
   addsToPlayerAttack: 5
   addsToPlayerDefense: 0
@@ -21,3 +22,7 @@ MonoBehaviour:
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
+  cost: 0
+  description: 
+  minLevelAvailable: 0
+  minZoneAvailable: 0

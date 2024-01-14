@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu (fileName = "Item", menuName = "ScriptableObjects/Item", order = 1)]
 public class Item : ScriptableObject
 {
+    public string itemName;
+
     public string typeOfItem; //Is it a weapon, armor, consumeable? 
     public float addsToPlayerAttack;
     public float addsToPlayerDefense;
@@ -14,4 +16,9 @@ public class Item : ScriptableObject
     public float addsToPlayerMaxHealth;
     public float restoresPlayerHealth;
     public float addsToPlayerHealthRegen;
+    public int cost;
+    public string description;
+
+    public int minLevelAvailable;
+    public int minZoneAvailable;
 }

@@ -78,7 +78,7 @@ public class NewBattleManager : MonoBehaviour
         enemy = CreateRandomEnemy(minRange, maxRange);
         if (enemy != null)
         {
-           enemyCooldown = enemy.attacksPerSecond / 1f;
+           enemyCooldown = enemy.secondsBetweenAttacks / 1f;
         }
     }
 
@@ -109,7 +109,7 @@ public class NewBattleManager : MonoBehaviour
             }
             else if (enemyCooldown <= 0)
             {
-                enemyCooldown = enemy.attacksPerSecond / 1f;
+                enemyCooldown = enemy.secondsBetweenAttacks / 1f;
                 playerTakeDamage();
             }
 

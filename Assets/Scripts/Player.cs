@@ -69,9 +69,9 @@ public class Player : MonoBehaviour
         levelUp = new Dictionary<string, float>
         {
             {"maxHP", 2f + .2f*Player.Instance.level},
-            {"hpRegen", .05f +.02f*Player.Instance.level},
+            {"hpRegen", .005f +.002f*Player.Instance.level},
             {"maxMagic", .5f + .1f *Player.Instance.level },
-            {"magicRegen", .03f + .01f*Player.Instance.level},
+            {"magicRegen", .003f + .001f*Player.Instance.level},
             {"attack", .5f + .01f*Player.Instance.level},
             {"defense", .4f + .01f*Player.Instance.level },
         };

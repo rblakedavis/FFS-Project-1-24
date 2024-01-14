@@ -10,6 +10,8 @@ using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
+
+
     [SerializeField] private TextMeshProUGUI zone;
     [SerializeField] private TextMeshProUGUI level;
     [SerializeField] private TextMeshProUGUI magic;
@@ -137,6 +139,7 @@ public class GameManager : MonoBehaviour
             case "GameOver":
                 AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
                 isMainMenuMusicPlaying = false;
+                Player.Instance.hp = Player.Instance.maxHP; //bandaid? or perma fix?
                 break;
         }
         // Update any pertinent variables here
@@ -196,7 +199,7 @@ public class GameManager : MonoBehaviour
 
                 UpdateStat(statName, statIncrease);
             }
-            bossRequiredLevel = (1 + gameData.curZoneIndex) * 5;
+            bossRequiredLevel = (1 + GameData.Instance.curZoneIndex) * 5;
             GameManager.Instance.onLevelUp.Invoke();
         }
         if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != GameData.Instance.subWindowText)
@@ -212,6 +215,10 @@ public class GameManager : MonoBehaviour
 
         }
 
+        if (Player.Instance.hp > Player.Instance.maxHP) 
+        {
+            Player.Instance.hp = Player.Instance.maxHP;
+        }
     }
 
         private IEnumerator WaitForLoad() 

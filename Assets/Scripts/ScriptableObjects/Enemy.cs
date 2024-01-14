@@ -20,6 +20,6 @@ public class Enemy : ScriptableObject
 
     public int expWorth;
 
-    public float attacksPerSecond;
+    public float secondsBetweenAttacks;
 
 }

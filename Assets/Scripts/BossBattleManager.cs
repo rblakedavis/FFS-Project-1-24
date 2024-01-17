@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class BossBattleManager : MonoBehaviour
 {
+    [SerializeField] private Item blobbyKeyItem;
 
     public Enemy enemy;
     private bool isEnemyDead = false;
@@ -73,6 +74,37 @@ public class BossBattleManager : MonoBehaviour
         //GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
 
         enemy = CreateBoss(gameData.curZoneIndex);
+        switch (enemy.enemyName)
+        {
+            case "Blobby":
+                if (Player.Instance.HasItem(blobbyKeyItem))
+                {
+                    enemy.damage = enemy.damage / 10;
+                }
+                    break;
+            case "Cave Troll":
+                //ifplayerhassecretitem....
+                break;
+
+            case "Minotaur":
+                break;
+
+            case "Deep Horror":
+                break;
+
+            case "Gatekeeper":
+                break;
+
+            default:
+
+                Debug.LogError("Boss not found in list!");
+                break;
+            // Pseudocode: 
+            // case caveboss: 
+            // check for caveboss key item
+            // etc... 
+            
+        }
         if (enemy != null)
         {
            enemyCooldown = enemy.secondsBetweenAttacks / 1f;
@@ -100,22 +132,16 @@ public class BossBattleManager : MonoBehaviour
                 enemyCooldown = 2.5f;
                 EnemyDead();
             }
-            else if (enemyCooldown >= 0)
+            else if (enemyCooldown > 0)
             {
                 enemyCooldown -= Time.deltaTime;
             }
-            else if (enemyCooldown < 0)
+            else if (enemyCooldown <= 0)
             {
                 enemyCooldown = enemy.secondsBetweenAttacks / 1f;
                 playerTakeDamage();
             }
 
-            //Think
-            //About
-            //Removing
-            //This
-            //Part
-            //Okay?
         }
         if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
         {

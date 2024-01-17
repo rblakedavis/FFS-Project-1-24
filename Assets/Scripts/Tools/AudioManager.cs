@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public AudioClip mainMenuMusic;
-    public AudioClip lootMenuMusic;
-    public AudioClip shopMenuMusic;
-    public AudioClip grindMenuMusic;
     public AudioClip gameOverMenuMusic;
     public AudioClip[] bossMenuMusic;
+
+    public AudioClip forestMusic;
+    public AudioClip caveMusic;
+    public AudioClip ruinsMusic;
+    public AudioClip depthsMusic;
+    public AudioClip underworldMusic;
+
     private Dictionary<string, AudioClip> sceneMusicDictionary = new Dictionary<string, AudioClip>();
+    private Dictionary<int, AudioClip> zoneMusicDictionary = new Dictionary<int, AudioClip>();
 
     private AudioSource audioSource;
 
@@ -37,6 +41,7 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         if (GameManager.Instance != null)
         {
             if (_instance == null)
@@ -47,6 +52,10 @@ public class AudioManager : MonoBehaviour
                 // Initialize audio manager
                 InitializeSceneMusicDictionary();
                 isInitialized = true;
+            }
+            else
+            {
+                Destroy(gameObject);
             }
         }
     }
@@ -60,11 +69,13 @@ public class AudioManager : MonoBehaviour
 
     private void InitializeSceneMusicDictionary()
     {
-        sceneMusicDictionary.Add("Loot", lootMenuMusic);
-        sceneMusicDictionary.Add("Shop", shopMenuMusic);
-        sceneMusicDictionary.Add("Grind", grindMenuMusic);
         sceneMusicDictionary.Add("GameOver", gameOverMenuMusic);
-        sceneMusicDictionary.Add("Main", mainMenuMusic);
+
+        zoneMusicDictionary.Add(0, forestMusic);
+        zoneMusicDictionary.Add(1, caveMusic);
+        zoneMusicDictionary.Add(2, ruinsMusic);
+        zoneMusicDictionary.Add(3, depthsMusic);
+        zoneMusicDictionary.Add(4, underworldMusic);
     }
 
     public void PlaySpecificBossMusic(int zone)
@@ -74,13 +85,13 @@ public class AudioManager : MonoBehaviour
 
     public void PlayNonBossSceneSpecificMusic(string sceneName)
     {
-        if (sceneMusicDictionary.ContainsKey(sceneName))
+        if (sceneName == "GameOver")
         {
-            PlayMusic(sceneMusicDictionary[sceneName]);
+            PlayMusic(gameOverMenuMusic);
         }
         else
         {
-            Debug.Log($"No music clip found for scene {sceneName}");
+            PlayMusic(zoneMusicDictionary[GameData.Instance.curZoneIndex]);
         }
     }
     private void PlayMusic(AudioClip clip)

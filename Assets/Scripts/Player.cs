@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     public float defense;
     public Dictionary<string, float> levelUp;
 
+    public List<Item> ownedItems = new List<Item>();
+
 
 
 
@@ -75,6 +77,23 @@ public class Player : MonoBehaviour
             {"attack", .5f + .01f*Player.Instance.level},
             {"defense", .4f + .01f*Player.Instance.level },
         };
+    }
+
+    public bool HasItem(Item item)
+    {
+        return ownedItems.Contains(item);
+    }
+
+    public void AttachItem(Item item)
+    {
+        if (!HasItem(item))
+        {
+            ownedItems.Add(item);
+        }
+        else
+        {
+            Debug.Log("Player has that item already");
+        }
     }
 
     private IEnumerator WaitForGameManager()

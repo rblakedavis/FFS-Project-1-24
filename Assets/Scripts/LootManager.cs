@@ -1,6 +1,7 @@
-using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LootManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class LootManager : MonoBehaviour
     [SerializeField] private float maxGoldMultiplier;
     [SerializeField] private float lootCooldown = .25f;
     [SerializeField] private Animator animator;
+    [SerializeField] private TextMeshProUGUI goldNumber;
+    [SerializeField] private TextMeshProUGUI healthNumber;
+    [SerializeField] private Image healthBarFill;
+    [SerializeField] private TextMeshProUGUI magicNumber;
+    [SerializeField] private Image magicBarFill;
     private float timeSinceLastLoot = .25f;
 
 
@@ -19,6 +25,9 @@ public class LootManager : MonoBehaviour
     private void Awake()
     {
         gameData = GameData.Instance;
+        animator.SetBool("isPlaying", true);
+        goldNumber.text = gameData.goldCur.ToString();
+
     }
     void Start()
     {
@@ -29,6 +38,11 @@ public class LootManager : MonoBehaviour
     void Update()
     {
         timeSinceLastLoot += Time.deltaTime;
+        healthNumber.text = Mathf.Floor(Player.Instance.hp).ToString();
+        healthBarFill.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+        magicNumber.text = Mathf.Floor(Player.Instance.magic).ToString();
+        magicBarFill.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+
 
     }
 
@@ -45,7 +59,10 @@ public class LootManager : MonoBehaviour
             gameData.goldCur += addedGold;
             subWindowText.text = $"you found {addedGold} gold!";
             timeSinceLastLoot = 0f;
-            
+            //play gold sound
+            goldNumber.text = gameData.goldCur.ToString();
+
+
         }
 
     }

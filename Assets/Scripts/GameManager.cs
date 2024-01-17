@@ -64,7 +64,6 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(_instance);
-        Debug.Log("Awake");
 
         if (_instance != this)
         {
@@ -91,11 +90,15 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
+        gameData = GameData.Instance;
+        gameData.subWindowText = $"Welcome to the {gameData.zoneNames[gameData.curZoneIndex]}.";
+
+
+        Debug.Log("OnEnable");
         if (!isInitialized && SceneManager.GetActiveScene().name == "Main")
         {
             gameData = GameData.Instance;
             
-            gameData.subWindowText = "Welcome to the game.";
             subWindow.text = gameData.subWindowText;
             zone.text = gameData.zoneNames[gameData.curZoneIndex];
             level.text = Player.Instance.level.ToString();
@@ -109,10 +112,16 @@ public class GameManager : MonoBehaviour
     #region Handle scene loads
     private void OnSceneLoaded(Scene scene2, LoadSceneMode mode)
     {
+        
+
         Scene scene = SceneManager.GetActiveScene();
         switch (scene.name)
         {
             case "Main":
+                subWindow = GameObject.Find("NotifWindowText").GetComponentInChildren<TextMeshProUGUI>();
+                if (subWindow !=null)
+                { subWindow.text = string.Empty; }
+                
                 if (!isMainMenuMusicPlaying)
                 {
                     AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
@@ -120,8 +129,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case "Grind":
-                AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
-                isMainMenuMusicPlaying = false;
+
                 break;
                         
             case "Loot":
@@ -139,7 +147,7 @@ public class GameManager : MonoBehaviour
             case "GameOver":
                 AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
                 isMainMenuMusicPlaying = false;
-                Player.Instance.hp = Player.Instance.maxHP; //bandaid? or perma fix?
+                Player.Instance.hp = Player.Instance.maxHP;
                 break;
         }
         // Update any pertinent variables here
@@ -189,7 +197,7 @@ public class GameManager : MonoBehaviour
         if (Player.Instance.experience >= Player.Instance.expNextLevel)
         {
             //insert some shoddy math for an experience curve
-            Player.Instance.expNextLevel = (int)Mathf.Ceil(Player.Instance.experience * 1.4f * Player.Instance.level);
+            Player.Instance.expNextLevel = (int)Mathf.Ceil((2f * Player.Instance.experience) + (1.4f * Player.Instance.level));
             Player.Instance.level++;
 
             foreach (var kvp in Player.Instance.levelUp)
@@ -205,6 +213,10 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "Main" && subWindow.text != GameData.Instance.subWindowText)
         {
             subWindow.text = GameData.Instance.subWindowText;
+            if (GameData.Instance.subWindowText == "")
+            {
+                GameData.Instance.subWindowText = $"Welcome to the {gameData.zoneNames[gameData.curZoneIndex]}.";
+            }
             zone.text = GameData.Instance.zoneNames[GameData.Instance.curZoneIndex];
             level.text = Player.Instance.level.ToString();
             magic.text = Mathf.Floor(Player.Instance.magic).ToString();
@@ -249,4 +261,5 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
 }

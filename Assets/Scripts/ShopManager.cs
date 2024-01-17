@@ -13,12 +13,12 @@ public class ShopManager : MonoBehaviour
 
     private void Awake()
     {
-        
+        InstantiateButtons();
+
     }
 
     private void Start()
     {
-        InstantiateButtons();
     }
 
     private void Update()
@@ -30,8 +30,10 @@ public class ShopManager : MonoBehaviour
     {
         foreach (Item item in items)
         {
-            Debug.Log("item name is " +  item.itemName);
-            if (Player.Instance.level >= item.minLevelAvailable &&
+            
+
+            
+            if (!Player.Instance.HasItem(item) && Player.Instance.level >= item.minLevelAvailable &&
                 GameData.Instance.curZoneIndex >= item.minZoneAvailable)
             {
                 GameObject button = Instantiate(buttonPrefab, content);
@@ -40,11 +42,31 @@ public class ShopManager : MonoBehaviour
                 {
                     buttonText.text = item.itemName;
                 }
+                button.tag = "SubMenuObjects";
 
                 GameObject itemObject = new GameObject(item.itemName);
                 itemObject.transform.SetParent(button.transform);
                 ItemContainer itemContainer = itemObject.AddComponent<ItemContainer>();
                 itemContainer.item = item;
+
+                button.GetComponent<Button>().onClick.AddListener(() => HandleButtonClick(item, button));
+                ShopTooltipHandler tooltipHandler = button.AddComponent<ShopTooltipHandler>();
+
+            }
+        }
+    }
+    private void HandleButtonClick(Item item, GameObject button)
+    {
+        if (!Player.Instance.HasItem(item))
+        {
+            if(item.typeOfItem != "Consumable" && GameData.Instance.goldCur >= item.cost)
+            {
+                item.itemPurchased(button);
+                Player.Instance.AttachItem(item);
+            }
+            else if (item.typeOfItem == "Consumable" && GameData.Instance.goldCur >= item.cost)
+            {
+                item.itemPurchased(button);
             }
         }
     }

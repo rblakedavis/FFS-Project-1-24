@@ -12,6 +12,9 @@ public class NewBattleManager : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private TextMeshProUGUI healthTMP;
 
+    [SerializeField] private Image shieldBar;
+    [SerializeField] private Image shieldIcon;
+
     [SerializeField] private Image enemyHealthBar;
     [SerializeField] private GameObject[] showAndHideEnemyHealth;
 
@@ -68,9 +71,9 @@ public class NewBattleManager : MonoBehaviour
         }
 
         //setup and create a new enemy
-        minRange = gameData.zoneOffset[gameData.curZoneIndex] - .4f;
+        minRange = gameData.zoneOffset[gameData.curZoneIndex] - .5f;
         Debug.Log("Min range is" + minRange);
-        maxRange = minRange + 2.4f; /* use a constant of 2.4 (because of the way range works) here... assumes ALL zones have 3 enemies*/
+        maxRange = minRange + 2.499f; /* use a constant near 2.5 (because of the way range works) here... assumes ALL zones have 3 enemies*/
         Debug.Log("Max range is" + maxRange);
 
         GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
@@ -87,7 +90,7 @@ public class NewBattleManager : MonoBehaviour
         bool isInitialized = false;
         if (!isInitialized)
         {
-            battleText.text = $"{enemy.name} appeared!";
+            battleText.text = $"{enemy.enemyName} appeared!";
             isInitialized = true;
         }
 
@@ -118,7 +121,7 @@ public class NewBattleManager : MonoBehaviour
                 animator.SetBool("EnemyDead", false);
                 animator.SetInteger("EnemyIndex", enemy.index);
                 enemy.damage = gameData.enemyList[enemy.index].damage;
-                battleText.text = $"{enemy.name} appeared!";
+                battleText.text = $"{enemy.enemyName} appeared!";
                 enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
                 for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
                 {
@@ -152,6 +155,13 @@ public class NewBattleManager : MonoBehaviour
         if (player != null && enemy != null)
         {
             playerShield += Player.Instance.defense;
+            if (playerShield > maxShield)
+            {
+                playerShield = maxShield;
+            }
+            shieldBar.fillAmount = playerShield / maxShield;
+            shieldBar.color = new Color(0, 0, 0, 0.82f);
+            shieldIcon.color = Color.white;
         }
     }
     public void playerRun()
@@ -162,9 +172,11 @@ public class NewBattleManager : MonoBehaviour
 
     private Enemy CreateRandomEnemy(float minRange, float maxRange)
     {
-        int randomEnemy = (int)Mathf.Round(Random.Range(minRange, maxRange));
+        float randomNumber = Random.Range(minRange, maxRange);
+        Debug.Log("random number is " +  randomNumber);
+        int randomEnemy = (int)Mathf.Round(randomNumber);
 
-        
+        Debug.Log("Random Enemy Will be " + randomEnemy);
 
         Enemy enemyBlueprint = gameData.enemyList[randomEnemy];
 
@@ -174,7 +186,7 @@ public class NewBattleManager : MonoBehaviour
         string originalName = enemyCopy.name;
         enemyCopy.name = originalName.Replace("(Clone)", "");
 
-        animator.SetInteger("EnemyIndex", randomEnemy); // 0 is a placeholder for further animations.
+        animator.SetInteger("EnemyIndex", randomEnemy);
 
         return enemyCopy;
     }
@@ -186,14 +198,18 @@ public class NewBattleManager : MonoBehaviour
         {
             playerShield -= trueDamage;
             //play a sound? show a shield graphic?
+            shieldBar.fillAmount = playerShield / maxShield;
             // decrease shield bar
         }
         else if (playerShield > 0 && playerShield  <= trueDamage)
         {
-            float newDamage = trueDamage - playerShield;
+            float newDamage = (trueDamage - playerShield) / 2;
             player.hp -= newDamage;
             playerShield = 0;
             //play a shield break sound? / graphic?
+            shieldBar.fillAmount = playerShield / maxShield;
+            shieldBar.color = new Color(0, 0, 0, 0);
+            shieldIcon.color = new Color (0, 0, 0, 0);
         }
         else if (playerShield <= 0)
         {
@@ -205,7 +221,7 @@ public class NewBattleManager : MonoBehaviour
             StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
 
             healthTMP.text = Mathf.Floor(player.hp).ToString();
-            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.name}";
+            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.enemyName}";
             healthBar.fillAmount = player.hp / player.maxHP;
         }
     }

@@ -6,49 +6,49 @@ using TMPro;
 public class TooltipHandler : MonoBehaviour
 {
     private string tempString;
-    private string shopTooltip;
-    private string lootTooltip;
-    private string grindTooltip;
+    
     private string bossTooltip;
+    private string bossTooltip1;
+    private string bossTooltip2;
+    private string grindTooltip;
+    private string lootTooltip;
+    private string shopTooltip;
+
     public float lingerTime = 1f;
     private Coroutine coroutine;
     private GameData gameData;
 
-    
+
+
 
     private void Start()
     {
-            gameData = GameData.Instance;
+        gameData = GameData.Instance;
+
+        bossTooltip1 = $"You must be level {GameManager.Instance.bossRequiredLevel} to fight this boss";
+        bossTooltip2 = "No running from bosses";
+        grindTooltip = $"exp: {Player.Instance.experience} \n level up at {Player.Instance.expNextLevel}";
+        lootTooltip = "Loot to gain gold";
+        shopTooltip = $"Gold: {GameData.Instance.goldCur} \n\n Gain levels = unlock more items." ;
     }
 
 public void OnMouseEnter()
     {
-        
-        string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip };
+        string[] excludedTooltips = { shopTooltip, lootTooltip, grindTooltip, bossTooltip1, bossTooltip2 };
 
-
-
-
-        if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text)) 
-        {
-            tempString = GameManager.Instance.subWindow.text;
-        }
-
-
-        switch(this.name)
+        switch (this.name)
         {
             case "BossBtn":
                 int playerRequiredLevel = GameManager.Instance.bossRequiredLevel;
                 if (Player.Instance.level < playerRequiredLevel)
                 {
-                    bossTooltip = $"You must be level {playerRequiredLevel} to fight this zone\"s boss";
+                    bossTooltip = bossTooltip1;
                 }
                 else
                 {
-                    bossTooltip = "Fight this zone\"s boss" +
-                    "No running from boss battles";
+                    bossTooltip = bossTooltip2;
                 }
-                if (gameData.subWindowText != bossTooltip)
+                if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text))
                 {
                     tempString = GameManager.Instance.subWindow.text;
                 }
@@ -62,10 +62,9 @@ public void OnMouseEnter()
 
                 break;
             case "GrindBtn":
-                grindTooltip = "Fight monsters to level up";
-                if (gameData.subWindowText != grindTooltip)
+                if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text))
                 {
-                    tempString = gameData.subWindowText;
+                    tempString = GameManager.Instance.subWindow.text;
                 }
                 gameData.subWindowText = grindTooltip;
 
@@ -78,10 +77,9 @@ public void OnMouseEnter()
                 break;
 
             case "LootBtn":
-                lootTooltip = "Loot to gain gold";
-                if (gameData.subWindowText != lootTooltip)
+                if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text))
                 {
-                    tempString = gameData.subWindowText;
+                    tempString = GameManager.Instance.subWindow.text;
                 }
                 gameData.subWindowText = lootTooltip;
 
@@ -96,11 +94,10 @@ public void OnMouseEnter()
             case "ShopBtn":
 
                 
-                shopTooltip = "Current Gold = " + gameData.goldCur;
-                if (gameData.subWindowText != shopTooltip)
+                if (!excludedTooltips.Contains(GameManager.Instance.subWindow.text))
                 {
-                    tempString = gameData.subWindowText;
-                }                
+                    tempString = GameManager.Instance.subWindow.text;
+                }
                 gameData.subWindowText = shopTooltip;
 
 
@@ -118,6 +115,10 @@ public void OnMouseEnter()
             
         }
     }
+    public void OnMouseDown()
+    {
+        gameData.subWindowText = tempString;
+    }
 
     public void OnMouseExit()
     {
@@ -129,6 +130,7 @@ public void OnMouseEnter()
         yield return new WaitForSeconds( lingerTime );
         gameData.subWindowText = tempString;
         tempString = string.Empty;
+        StopCoroutine(coroutine);
     }
 
 }

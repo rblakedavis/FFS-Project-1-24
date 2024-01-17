@@ -265,7 +265,7 @@ MonoBehaviour:
   zoneNames:
   - Forest
   - Cave
-  - Ruins
+  - Labyrinth
   - Depths
   - Underworld
   zoneNumEnemies: 1
@@ -278,8 +278,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72673eaa78e08f24989f6a8cb195328d, type: 2}
   - {fileID: 11400000, guid: f0262465204f8a840b97a3197ca771f0, type: 2}
   - {fileID: 11400000, guid: 43f6b254163235b4dbd90ce7d92e504a, type: 2}
+  - {fileID: 11400000, guid: 2f8f4ac3c17b614489fc901a52058a03, type: 2}
+  - {fileID: 11400000, guid: 8dae80db7967b334bb8640baba5ce70d, type: 2}
+  - {fileID: 11400000, guid: c3683893c4c48b74cadd1648c55e7026, type: 2}
+  - {fileID: 11400000, guid: 368bf31f70f4f984daf7fa024afb411b, type: 2}
+  - {fileID: 11400000, guid: 7bbca8e41f68d724ea225327e05d8d35, type: 2}
+  - {fileID: 11400000, guid: ce35912bf6ad8de4bbb758f6a9371ce0, type: 2}
+  - {fileID: 11400000, guid: 64926d85cc3c68a468faf5a5342b70ee, type: 2}
+  - {fileID: 11400000, guid: 763b54c4cfd8ea844819675484353d86, type: 2}
+  - {fileID: 11400000, guid: 4414a53f61b76c6428397162e94b49c1, type: 2}
+  - {fileID: 11400000, guid: ed1f9f0b3bc29f44d917c2b13843abf8, type: 2}
+  - {fileID: 11400000, guid: 288cfe16053a0cb4e95026d2dc0b5e1d, type: 2}
+  - {fileID: 11400000, guid: 30923164de7e5964581907fd58adf668, type: 2}
   bossList:
   - {fileID: 11400000, guid: b916ff1da248ef94583e40b442752013, type: 2}
+  - {fileID: 11400000, guid: 7703610b974cfa942b2c1a65bb8d3492, type: 2}
+  - {fileID: 11400000, guid: 4c29fbcd0d337b7488081d9404db916f, type: 2}
+  - {fileID: 11400000, guid: 143032c40c988b248aabcfe2641f1609, type: 2}
+  - {fileID: 11400000, guid: 03cc23da3693eee429bff5472105d815, type: 2}
   curEnemy: 0
   goldCur: 0
   subWindowText: example text
@@ -341,13 +357,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6bb78e9ce52224d9f25891bc245ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuMusic: {fileID: 8300000, guid: 5288d626900c498438c12c73aaa7168f, type: 3}
-  lootMenuMusic: {fileID: 0}
-  shopMenuMusic: {fileID: 0}
-  grindMenuMusic: {fileID: 8300000, guid: 48590cee6b2e31145a4c3fc90b9b24b2, type: 3}
   gameOverMenuMusic: {fileID: 8300000, guid: 45aff71980e608a4c96952592dd943ea, type: 3}
   bossMenuMusic:
   - {fileID: 8300000, guid: c3f24aada9744c2449063cb5fad47b6f, type: 3}
+  - {fileID: 8300000, guid: c3f24aada9744c2449063cb5fad47b6f, type: 3}
+  - {fileID: 8300000, guid: c3f24aada9744c2449063cb5fad47b6f, type: 3}
+  - {fileID: 8300000, guid: c3f24aada9744c2449063cb5fad47b6f, type: 3}
+  - {fileID: 8300000, guid: c3f24aada9744c2449063cb5fad47b6f, type: 3}
+  forestMusic: {fileID: 8300000, guid: 5288d626900c498438c12c73aaa7168f, type: 3}
+  caveMusic: {fileID: 8300000, guid: f00b00b1a8493ed47ab729a89d529d1d, type: 3}
+  ruinsMusic: {fileID: 0}
+  depthsMusic: {fileID: 8300000, guid: 44b416bd05f94bc499b5a200dca9a0c0, type: 3}
+  underworldMusic: {fileID: 0}
 --- !u!4 &169825639
 Transform:
   m_ObjectHideFlags: 0
@@ -471,7 +492,7 @@ GameObject:
   - component: {fileID: 290497413}
   - component: {fileID: 290497414}
   m_Layer: 5
-  m_Name: NotifWinowText
+  m_Name: NotifWindowText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -693,7 +714,7 @@ MonoBehaviour:
   background:
   - {fileID: 21300000, guid: 690cc2fdfb27da54ab5c2af084e5342e, type: 3}
   - {fileID: 21300000, guid: c9e39fad775533e488db6474c90c0758, type: 3}
-  - {fileID: 21300000, guid: f9a0fa52301c6c34ba0dc28e629187cb, type: 3}
+  - {fileID: 21300000, guid: b4f76c36c50d6e442ac4561981c7dcb2, type: 3}
   - {fileID: 21300000, guid: 894d182ffbeada544b8b0e05312aaf46, type: 3}
   - {fileID: 21300000, guid: 8ff5f9eab860a9744a06117d23394391, type: 3}
 --- !u!4 &341049289
@@ -1729,8 +1750,9 @@ MonoBehaviour:
   magic: 0
   maxMagic: 2
   magicRegen: 0.03
-  attack: 1
-  defense: 5
+  attack: 0.5
+  defense: 0.2
+  ownedItems: []
 --- !u!4 &796632936
 Transform:
   m_ObjectHideFlags: 0
@@ -2543,6 +2565,7 @@ GameObject:
   - component: {fileID: 1017154427}
   - component: {fileID: 1017154426}
   - component: {fileID: 1017154425}
+  - component: {fileID: 1017154428}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2611,6 +2634,7 @@ RectTransform:
   - {fileID: 1328810710}
   - {fileID: 1926593100}
   - {fileID: 1169626339}
+  - {fileID: 1706980456}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2618,6 +2642,14 @@ RectTransform:
   m_AnchoredPosition: {x: 377.75, y: 393.75}
   m_SizeDelta: {x: 160, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1017154428
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017154423}
+  m_CullTransparentMesh: 1
 --- !u!1 &1031317171
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,6 +4033,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1706980455
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1706980456}
+  - component: {fileID: 1706980458}
+  - component: {fileID: 1706980457}
+  m_Layer: 5
+  m_Name: PauseOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1706980456
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706980455}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1017154427}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.00062561, y: 0.00037384}
+  m_SizeDelta: {x: 160, y: 120}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1706980457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706980455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.3, g: 0.3, b: 0.3, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1706980458
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706980455}
+  m_CullTransparentMesh: 1
 --- !u!1 &1718903640
 GameObject:
   m_ObjectHideFlags: 0

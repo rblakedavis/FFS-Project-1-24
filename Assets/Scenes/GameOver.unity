@@ -542,7 +542,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '-  Start again'
+  m_text: '-  Try again'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5233a40841969824f8c3e8329437b406, type: 2}
   m_sharedMaterial: {fileID: -3928670052044662276, guid: 5233a40841969824f8c3e8329437b406, type: 2}
@@ -605,7 +605,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 71.08193, y: 20.877895, z: 85.87291, w: 25.700237}
+  m_margin: {x: 71.08193, y: 20.877895, z: 91.63111, w: 25.700237}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1688,8 +1688,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 34.57178, y: -2.4038}
-  m_SizeDelta: {x: 36.5, y: 5}
+  m_AnchoredPosition: {x: 32.469296, y: -2.4038}
+  m_SizeDelta: {x: 32.295, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1505117021
 MonoBehaviour:

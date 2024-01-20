@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e621ba0821d3b24091bfe483f6b27b6, type: 3}
+  m_Name: Minotaur
+  m_EditorClassIdentifier: 
+  index: -1
+  bossIndex: 2
+  sprite: {fileID: 0}
+  enemyName: Minotaur
+  damage: 1
+  damageModifier: 0
+  maxHealth: 1
+  curHealth: 1
+  expWorth: 0
+  secondsBetweenAttacks: 1

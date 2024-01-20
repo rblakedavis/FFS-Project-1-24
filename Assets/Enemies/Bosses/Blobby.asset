@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyName: Blobby
   damage: 200
   damageModifier: 0
-  maxHealth: 1000
-  curHealth: 1000
-  expWorth: 500
-  attacksPerSecond: 1
+  maxHealth: 500
+  curHealth: 500
+  expWorth: 0
+  secondsBetweenAttacks: 1.2

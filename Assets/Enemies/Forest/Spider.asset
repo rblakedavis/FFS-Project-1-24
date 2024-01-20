@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyName: Spider
   damage: 2
   damageModifier: 1
-  maxHealth: 20
-  curHealth: 20
+  maxHealth: 15
+  curHealth: 15
   expWorth: 2
-  attacksPerSecond: 0.8
+  secondsBetweenAttacks: 0.8

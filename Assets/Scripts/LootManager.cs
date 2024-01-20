@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LootManager : MonoBehaviour
 {
@@ -10,14 +10,27 @@ public class LootManager : MonoBehaviour
     [SerializeField] private float goldConstant;
     [SerializeField] private float minGoldMultiplier;
     [SerializeField] private float maxGoldMultiplier;
-    [SerializeField] private float lootCooldown = .25f;
+    [SerializeField] private float lootCooldown;
+    [SerializeField] private Animator animator;
+    [SerializeField] private TextMeshProUGUI goldNumber;
+    [SerializeField] private TextMeshProUGUI healthNumber;
+    [SerializeField] private Image healthBarFill;
+    [SerializeField] private TextMeshProUGUI magicNumber;
+    [SerializeField] private Image magicBarFill;
+    [SerializeField] private SFXManager sfxManager;
+    [SerializeField] private AudioSource audioSource;
+
     private float timeSinceLastLoot = .25f;
+
 
 
     // Start is called before the first frame update
     private void Awake()
     {
-        gameData = GameManager.Instance.gameData;
+        gameData = GameData.Instance;
+        animator.SetBool("isPlaying", true);
+        goldNumber.text = gameData.goldCur.ToString();
+
     }
     void Start()
     {
@@ -28,12 +41,17 @@ public class LootManager : MonoBehaviour
     void Update()
     {
         timeSinceLastLoot += Time.deltaTime;
+        healthNumber.text = Mathf.Floor(Player.Instance.hp).ToString();
+        healthBarFill.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
+        magicNumber.text = Mathf.Floor(Player.Instance.magic).ToString();
+        magicBarFill.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
+
 
     }
 
     public void LootButtonPressed()
     {
-        float lootCooldown = .25f;
+        
         if ( lootCooldown > timeSinceLastLoot)
         {
             return;
@@ -44,8 +62,16 @@ public class LootManager : MonoBehaviour
             gameData.goldCur += addedGold;
             subWindowText.text = $"you found {addedGold} gold!";
             timeSinceLastLoot = 0f;
-            
+            //play gold sound
+            goldNumber.text = gameData.goldCur.ToString();
+
+
         }
+
+    }
+
+    public void BackButtonPressed()
+    {
 
     }
 

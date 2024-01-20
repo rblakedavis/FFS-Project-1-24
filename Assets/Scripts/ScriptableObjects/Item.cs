@@ -46,6 +46,7 @@ public class Item : ScriptableObject
             {
                 Player.Instance.hp += restoresPlayerHealth;
                 Player.Instance.magic += restoresPlayerMagic;
+                Destroy(button);
             }
         }
         else

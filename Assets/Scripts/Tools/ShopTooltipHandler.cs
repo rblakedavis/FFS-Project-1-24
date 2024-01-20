@@ -30,8 +30,6 @@ public class ShopTooltipHandler : MonoBehaviour
         { 
             itemDescirption = itemContainer.item.description;
             itemCost = itemContainer.item.cost.ToString();
-            goldAfterPurchase = (GameData.Instance.goldCur - itemContainer.item.cost).ToString();
-
         }
         else
         {
@@ -42,6 +40,10 @@ public class ShopTooltipHandler : MonoBehaviour
     void Update()
     {
         currentGoldWindow.text = GameData.Instance.goldCur.ToString();
+        if (itemContainer != null && itemContainer.item != null)
+        {
+            goldAfterPurchase = (GameData.Instance.goldCur - itemContainer.item.cost).ToString();
+        }
     }
 
     private void OnMouseEnter()

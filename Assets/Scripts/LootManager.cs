@@ -10,13 +10,16 @@ public class LootManager : MonoBehaviour
     [SerializeField] private float goldConstant;
     [SerializeField] private float minGoldMultiplier;
     [SerializeField] private float maxGoldMultiplier;
-    [SerializeField] private float lootCooldown = .25f;
+    [SerializeField] private float lootCooldown;
     [SerializeField] private Animator animator;
     [SerializeField] private TextMeshProUGUI goldNumber;
     [SerializeField] private TextMeshProUGUI healthNumber;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private TextMeshProUGUI magicNumber;
     [SerializeField] private Image magicBarFill;
+    [SerializeField] private SFXManager sfxManager;
+    [SerializeField] private AudioSource audioSource;
+
     private float timeSinceLastLoot = .25f;
 
 
@@ -48,7 +51,7 @@ public class LootManager : MonoBehaviour
 
     public void LootButtonPressed()
     {
-        float lootCooldown = .25f;
+        
         if ( lootCooldown > timeSinceLastLoot)
         {
             return;

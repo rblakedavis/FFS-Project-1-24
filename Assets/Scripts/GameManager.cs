@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
                 if (!isMainMenuMusicPlaying)
                 {
                     AudioManager.Instance.PlayNonBossSceneSpecificMusic(scene.name);
-                    isMainMenuMusicPlaying = false;
+                    isMainMenuMusicPlaying = true;
                 }
                 break;
             case "Grind":
@@ -197,7 +197,8 @@ public class GameManager : MonoBehaviour
         if (Player.Instance.experience >= Player.Instance.expNextLevel)
         {
             //insert some shoddy math for an experience curve
-            Player.Instance.expNextLevel = (int)Mathf.Ceil((2f * Player.Instance.experience) + (1.4f * Player.Instance.level));
+            float expPrevLevel = Player.Instance.expNextLevel;
+            Player.Instance.expNextLevel = (int)Mathf.Ceil((1.2f * expPrevLevel) + (3f * Player.Instance.level));
             Player.Instance.level++;
 
             foreach (var kvp in Player.Instance.levelUp)
@@ -230,6 +231,10 @@ public class GameManager : MonoBehaviour
         if (Player.Instance.hp > Player.Instance.maxHP) 
         {
             Player.Instance.hp = Player.Instance.maxHP;
+        }
+        if (Player.Instance.magic > Player.Instance.maxMagic)
+        {
+            Player.Instance.magic = Player.Instance.maxMagic;
         }
     }
 

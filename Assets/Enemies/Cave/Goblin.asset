@@ -16,9 +16,9 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Goblin
-  damage: 3
+  damage: 6
   damageModifier: 0
-  maxHealth: 15
-  curHealth: 15
-  expWorth: 0
+  maxHealth: 75
+  curHealth: 75
+  expWorth: 8
   secondsBetweenAttacks: 1

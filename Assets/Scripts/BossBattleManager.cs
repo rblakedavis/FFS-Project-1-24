@@ -19,6 +19,9 @@ public class BossBattleManager : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private TextMeshProUGUI healthTMP;
 
+    [SerializeField] private Image shieldBar;
+    [SerializeField] private Image shieldIcon;
+
     [SerializeField] private Image enemyHealthBar;
     [SerializeField] private GameObject[] showAndHideEnemyHealth;
 
@@ -57,7 +60,7 @@ public class BossBattleManager : MonoBehaviour
 
 
         //setup player shield, health, magic
-        maxShield = player.hp / (2 + (player.level / 5));
+        maxShield = ((player.hp / 2) + (player.level / 2));
         healthTMP.text = Mathf.Floor(player.hp).ToString();
         healthBar.fillAmount = player.hp / player.maxHP;
         magicTMP.text = Mathf.Floor(player.magic).ToString();
@@ -79,7 +82,7 @@ public class BossBattleManager : MonoBehaviour
             case "Blobby":
                 if (Player.Instance.HasItem(blobbyKeyItem))
                 {
-                    enemy.damage = enemy.damage / 10;
+                    enemy.damage = enemy.damage / 20;
                 }
                     break;
             case "Cave Troll":
@@ -116,7 +119,7 @@ public class BossBattleManager : MonoBehaviour
         bool isInitialized = false;
         if (!isInitialized)
         {
-            battleText.text = $"You foolishly challenge {enemy.name}...";
+            battleText.text = $"You foolishly challenge {enemy.enemyName}...";
             isInitialized = true;
         }
 
@@ -159,6 +162,11 @@ public class BossBattleManager : MonoBehaviour
         {
             sceneChanger.ChangeScene("Main");
         }
+
+        healthBar.fillAmount = player.hp / player.maxHP;
+        healthTMP.text = Mathf.Floor(player.hp).ToString();
+        magicBar.fillAmount = player.magic / player.maxMagic;
+        magicTMP.text = Mathf.Floor(player.magic).ToString();
     }
 
     public void playerAttack()
@@ -174,6 +182,13 @@ public class BossBattleManager : MonoBehaviour
         if (player != null && enemy != null)
         {
             playerShield += Player.Instance.defense;
+            if (playerShield > maxShield)
+            {
+                playerShield = maxShield;
+            }
+            shieldBar.fillAmount = playerShield / maxShield;
+            shieldBar.color += new Color(0, 0, 0, 0.82f);
+            shieldIcon.color = Color.white;
         }
     }
     public void playerRun()
@@ -201,35 +216,41 @@ public class BossBattleManager : MonoBehaviour
         {
             playerShield -= trueDamage;
             //play a sound? show a shield graphic?
+            shieldBar.fillAmount = playerShield / maxShield;
             // decrease shield bar
         }
+
         else if (playerShield > 0 && playerShield  <= trueDamage)
         {
-            float newDamage = trueDamage - playerShield;
+            float newDamage = (trueDamage - playerShield) / 2;
             player.hp -= newDamage;
             playerShield = 0;
             //play a shield break sound? / graphic?
+            shieldBar.fillAmount = playerShield / maxShield;
+            shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
+            shieldIcon.color = new Color(0, 0, 0, 0);
         }
+
         else if (playerShield <= 0)
         {
             player.hp -= trueDamage;
 
-            Quaternion quaternion = new Quaternion();
-            Vector4 rotation = new Vector4(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f), 0);
-            quaternion.Set(rotation.x, rotation.y, rotation.z, rotation.w);
-            screenFlash.transform.rotation = quaternion;
+            screenFlash.transform.eulerAngles = new Vector3(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f));
+
             screenFlash.transform.localScale = new Vector3(850, 850, 850);
             StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
 
             healthTMP.text = Mathf.Floor(player.hp).ToString();
-            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.name}";
+            battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.enemyName}";
             healthBar.fillAmount = player.hp / player.maxHP;
         }
     }
 
     public void EnemyDead()
     {
-        Player.Instance.experience += enemy.expWorth;
+        int oldExp = Player.Instance.experience;
+        int expDifferential = Player.Instance.expNextLevel - oldExp;
+        Player.Instance.experience += expDifferential;
         Destroy(enemy); enemy = null;
         for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
         {

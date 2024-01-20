@@ -16,9 +16,9 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Golem
-  damage: 1
+  damage: 15
   damageModifier: 0
-  maxHealth: 15
-  curHealth: 15
-  expWorth: 0
-  secondsBetweenAttacks: 1
+  maxHealth: 100
+  curHealth: 100
+  expWorth: 11
+  secondsBetweenAttacks: 2

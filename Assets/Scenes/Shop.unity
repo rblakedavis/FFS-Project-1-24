@@ -2625,7 +2625,7 @@ MonoBehaviour:
   background:
   - {fileID: 21300000, guid: 690cc2fdfb27da54ab5c2af084e5342e, type: 3}
   - {fileID: 21300000, guid: c9e39fad775533e488db6474c90c0758, type: 3}
-  - {fileID: 21300000, guid: f9a0fa52301c6c34ba0dc28e629187cb, type: 3}
+  - {fileID: 21300000, guid: b4f76c36c50d6e442ac4561981c7dcb2, type: 3}
   - {fileID: 21300000, guid: 894d182ffbeada544b8b0e05312aaf46, type: 3}
   - {fileID: 21300000, guid: 8ff5f9eab860a9744a06117d23394391, type: 3}
 --- !u!4 &1413048513

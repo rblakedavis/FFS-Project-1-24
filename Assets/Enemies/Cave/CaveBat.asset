@@ -16,9 +16,9 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Cave Bat
-  damage: 1
+  damage: 9
   damageModifier: 0
-  maxHealth: 15
-  curHealth: 15
-  expWorth: 0
+  maxHealth: 50
+  curHealth: 50
+  expWorth: 5
   secondsBetweenAttacks: 1

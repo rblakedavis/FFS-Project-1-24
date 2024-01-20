@@ -22,7 +22,7 @@ MonoBehaviour:
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
-  cost: 1000
+  cost: 550
   description: 'Something compels you to buy it, useless as it may be. '
   minLevelAvailable: 5
   minZoneAvailable: 0

@@ -16,10 +16,16 @@ public class Enemy : ScriptableObject
 
     public float maxHealth;
     public float curHealth;
+    public float healthModifier;
 
 
     public int expWorth;
 
     public float secondsBetweenAttacks;
+
+    private void OnDestroy()
+    {
+        Debug.Log("Max Health was " + maxHealth);
+    }
 
 }

@@ -161,30 +161,28 @@ public class GameManager : MonoBehaviour
         {
             timeSinceRegen += Time.deltaTime;
         }
-        if (timeSinceRegen > regenCooldown && Player.Instance.hp < Player.Instance.maxHP) 
+        if (timeSinceRegen > regenCooldown) 
         {
-            Player.Instance.hp += Player.Instance.hpRegen;
-            timeSinceRegen = 0;
+            if (Player.Instance.hp < Player.Instance.maxHP)
+            {
+                Player.Instance.hp += Player.Instance.hpRegen;
+            }
+            if (Player.Instance.magic < Player.Instance.maxMagic)
+            {
+                Player.Instance.magic += Player.Instance.magicRegen;
+            }
             if (SceneManager.GetActiveScene().name == "Main")
             {
                 healthBar.fillAmount = Player.Instance.hp / Player.Instance.maxHP;
                 health.text = Mathf.Floor(Player.Instance.hp).ToString();
-            }
-
-        }
-        
-        if (timeSinceRegen > regenCooldown && Player.Instance.magic < Player.Instance.maxMagic)
-        {
-            Player.Instance.magic += Player.Instance.magicRegen;
-            timeSinceRegen = 0;
-            if (SceneManager.GetActiveScene().name == "Main")
-            {
                 magicBar.fillAmount = Player.Instance.magic / Player.Instance.maxMagic;
                 magic.text = Mathf.Floor(Player.Instance.magic).ToString();
-                
             }
-
+            timeSinceRegen = 0;
+            
         }
+        
+
 
         string activeScene = SceneManager.GetActiveScene().name;
         if (Player.Instance.hp <= 0 && activeScene != "GameOver")

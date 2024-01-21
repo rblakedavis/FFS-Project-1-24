@@ -165,13 +165,10 @@ public class NewBattleManager : MonoBehaviour
         {
             shieldCooldown -= Time.deltaTime;
         }
-
         else if (shieldCooldown <= 0 && playerShield > 0)
         {
-            Debug.Log("Player shield is " + playerShield);
             playerShield -= (shieldDecrease * Player.Instance.defense/shieldDecreasedRealizedMultiplier);
             shieldCooldown = initialShieldCooldown;
-            Debug.Log("Shield is " + playerShield);
             shieldBar.fillAmount = playerShield / maxShield;
             if (shieldDecreaseAcceleration <= 0)
             {
@@ -187,6 +184,7 @@ public class NewBattleManager : MonoBehaviour
                 shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier / shieldDecreaseAcceleration;
                 shieldDecreaseAcceleration++;
             }
+
             if (playerShield <= 0)
             {
                 shieldBar.fillAmount = playerShield / maxShield;
@@ -223,6 +221,7 @@ public class NewBattleManager : MonoBehaviour
             shieldBar.color = new Color(1, 1, 1, 0.82f);
             shieldIcon.color = Color.white;
             shieldDecreaseAcceleration = 0;
+            Debug.Log("Shield is " + playerShield);
         }
     }
     public void playerRun()
@@ -244,6 +243,8 @@ public class NewBattleManager : MonoBehaviour
         enemyCopy.name = originalName.Replace("(Clone)", "");
 
         animator.SetInteger("EnemyIndex", randomEnemy);
+        enemyCopy.maxHealth = ( enemyBlueprint.maxHealth + (( Player.Instance.level - 1 ) * enemyBlueprint.healthModifier ));
+        enemyCopy.curHealth = enemyCopy.maxHealth;
 
         return enemyCopy;
     }
@@ -298,6 +299,8 @@ public class NewBattleManager : MonoBehaviour
 
     public void EnemyDead()
     {
+        audioSource.clip = sFXManager.enemyDownClips[0];
+        audioSource.PlayOneShot(audioSource.clip);
         Player.Instance.experience += enemy.expWorth;
         Destroy(enemy); enemy = null;
         for (int i = 0; i < showAndHideEnemyHealth.Length; i++)

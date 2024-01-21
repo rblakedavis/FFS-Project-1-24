@@ -23,7 +23,7 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0.01
   cost: 300
-  description: "A pretty charm. Slightly raises many of your stats.\n Adds 2 to def\n
+  description: "A pretty charm. Slightly raises many of your stats.\n Adds 5 to def\n
     Adds 1 to HP and MP\n Adds 1% to regen"
   minLevelAvailable: 3
   minZoneAvailable: 0

@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: ArcaneFocus
+  m_Name: Rock
   m_EditorClassIdentifier: 
-  itemName: Arcane Focus
-  typeOfItem: Weapon
-  addsToPlayerAttack: 0.5
+  itemName: Rock
+  typeOfItem: Key
+  addsToPlayerAttack: 0
   addsToPlayerDefense: 0
-  addsToPlayerMaxMagic: 1
+  addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
-  addsToPlayerMagicRegen: 0.01
+  addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
-  addsToPlayerHealthRegen: 0.01
-  cost: 350
-  description: "A powerful trinket.\n\n Adds 0.5 to Atk\n Adds 1% to regen\n Adds
-    1 to Magic"
-  minLevelAvailable: 4
-  minZoneAvailable: 0
+  addsToPlayerHealthRegen: 0
+  cost: 850
+  description: Appears to be just a rock. But looks can be deceiving.
+  minLevelAvailable: 10
+  minZoneAvailable: 1

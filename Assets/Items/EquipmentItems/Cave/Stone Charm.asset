@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: ArcaneFocus
+  m_Name: Stone Charm
   m_EditorClassIdentifier: 
-  itemName: Arcane Focus
-  typeOfItem: Weapon
+  itemName: Stone Charm
+  typeOfItem: Charm
   addsToPlayerAttack: 0.5
-  addsToPlayerDefense: 0
+  addsToPlayerDefense: 0.05
   addsToPlayerMaxMagic: 1
   restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0.01
-  addsToPlayerMaxHealth: 0
+  addsToPlayerMaxHealth: 1
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0.01
-  cost: 350
-  description: "A powerful trinket.\n\n Adds 0.5 to Atk\n Adds 1% to regen\n Adds
-    1 to Magic"
-  minLevelAvailable: 4
-  minZoneAvailable: 0
+  cost: 450
+  description: "A very plain charm. Slightly increases many of your stats.\n\n Adds
+    0.5 to Atk\n Adds 5 to Def\n Adds 1 to MaxHP\n Adds 1% to Regen\n"
+  minLevelAvailable: 8
+  minZoneAvailable: 1

@@ -1970,7 +1970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1239290495}
-  - component: {fileID: 1239290494}
+  - component: {fileID: 1239290496}
   m_Layer: 0
   m_Name: ShopManager
   m_TagString: Untagged
@@ -1978,28 +1978,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1239290494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239290493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3297fd3974aaa0c46b2a19ecef488128, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  items:
-  - {fileID: 11400000, guid: 2eb32f191e803a944978bfc6d8eb5f11, type: 2}
-  - {fileID: 11400000, guid: 5000c8f3c61db6540baad22a06f22add, type: 2}
-  - {fileID: 11400000, guid: 41af3489021956f4ea379bb9a497473d, type: 2}
-  - {fileID: 11400000, guid: 627b6216b708cc140918d5ae17cba8ac, type: 2}
-  - {fileID: 11400000, guid: 526629a4bd239b34595db56c1b922002, type: 2}
-  - {fileID: 11400000, guid: 37ba26ec2ba64274eb7cc15801ef3f2a, type: 2}
-  content: {fileID: 1792573270}
-  buttonPrefab: {fileID: 2130895041826082466, guid: 57363645c68d3a0419523e3ccbca506f, type: 3}
-  tooltipHandler: {fileID: 267946202}
 --- !u!4 &1239290495
 Transform:
   m_ObjectHideFlags: 0
@@ -2015,6 +1993,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1239290496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239290493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3297fd3974aaa0c46b2a19ecef488128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items:
+  - {fileID: 11400000, guid: 2eb32f191e803a944978bfc6d8eb5f11, type: 2}
+  - {fileID: 11400000, guid: 41af3489021956f4ea379bb9a497473d, type: 2}
+  - {fileID: 11400000, guid: 5000c8f3c61db6540baad22a06f22add, type: 2}
+  - {fileID: 11400000, guid: 627b6216b708cc140918d5ae17cba8ac, type: 2}
+  - {fileID: 11400000, guid: 526629a4bd239b34595db56c1b922002, type: 2}
+  - {fileID: 11400000, guid: 37ba26ec2ba64274eb7cc15801ef3f2a, type: 2}
+  - {fileID: 11400000, guid: 920b38849cb4c004795703274be52ac8, type: 2}
+  - {fileID: 11400000, guid: a543a3f7d728fb04797d47c27bde6147, type: 2}
+  - {fileID: 11400000, guid: 06e1095e4aafff34e991e9acc3c89ab8, type: 2}
+  - {fileID: 11400000, guid: d436dd18c6009eb40a0b1df9c2a58eed, type: 2}
+  content: {fileID: 1792573270}
+  buttonPrefab: {fileID: 2130895041826082466, guid: 57363645c68d3a0419523e3ccbca506f, type: 3}
+  tooltipHandler: {fileID: 267946202}
 --- !u!1 &1259285447
 GameObject:
   m_ObjectHideFlags: 0

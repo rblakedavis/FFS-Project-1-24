@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: 0
   sprite: {fileID: 372498998, guid: df47084ea3566c548b00b2f8c80b69ba, type: 3}
   enemyName: Blobby
-  damage: 200
+  damage: 100
   damageModifier: 0
-  maxHealth: 500
-  curHealth: 500
+  maxHealth: 165
+  curHealth: 165
+  healthModifier: 0
   expWorth: 0
   secondsBetweenAttacks: 1.2

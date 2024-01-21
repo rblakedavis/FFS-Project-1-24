@@ -44,13 +44,31 @@ public class BossBattleManager : MonoBehaviour
     [SerializeField] float screenShakeDuration;
     [SerializeField] float screenShakeMagnitude;
 
-    private float minRange;
-    private float maxRange;
+
 
     private float enemyCooldown;
+    private float textCooldown;
+    [SerializeField] private float shieldCooldown;
+    [SerializeField] private float shieldDecrease;
+    [SerializeField] private float shieldDecreaseDefenseMultiplier;
+    private float initialShieldCooldown;
+    private float shieldDecreasedRealizedMultiplier;
+    private float shieldDecreaseAcceleration = 0f;
+    [SerializeField] private float shieldDecreaseAccelerationClamp;
+
+    [SerializeField] private TextMeshProUGUI playerLevelHUD;
+    [SerializeField] private TextMeshProUGUI playerExpToNextHUD;
+
+    [SerializeField] SFXManager sFXManager;
+    [SerializeField] AudioSource audioSource;
+
+    [SerializeField] VFXManager vFXManager;
 
     private void Awake()
     {
+        shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
+        initialShieldCooldown = shieldCooldown;
+
         //clear the battle text window
         battleText.text = string.Empty;
 
@@ -116,13 +134,9 @@ public class BossBattleManager : MonoBehaviour
 
     private void Start()
     {
-        bool isInitialized = false;
-        if (!isInitialized)
-        {
-            battleText.text = $"You foolishly challenge {enemy.enemyName}...";
-            isInitialized = true;
-        }
-
+        battleText.text = $"You foolishly challenge {enemy.enemyName}...";
+        playerLevelHUD.text = player.level.ToString();
+        playerExpToNextHUD.text = (player.expNextLevel - player.experience).ToString();
         //call the battle method
     }
 
@@ -142,14 +156,23 @@ public class BossBattleManager : MonoBehaviour
             else if (enemyCooldown <= 0)
             {
                 enemyCooldown = enemy.secondsBetweenAttacks / 1f;
-                playerTakeDamage();
+                PlayerTakeDamage();
             }
 
         }
+        
+        textCooldown = enemyCooldown;
+        
+        if (textCooldown <= 0.5f)
+        {
+            battleText.text = string.Empty;
+        }
+
         if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
         {
             bossDeadElapsed += Time.deltaTime;
         }
+
         if (bossDeadElapsed >= bossDeadDelay/2 && !playerHasChangedZones)
         {
             battleText.text = $"Left {gameData.zoneNames[gameData.curZoneIndex]}\n";
@@ -158,9 +181,44 @@ public class BossBattleManager : MonoBehaviour
             battleText.text += $"Moving to {gameData.zoneNames[gameData.curZoneIndex]}";
             playerHasChangedZones = true;
         }
+
         if (bossDeadElapsed >= bossDeadDelay)
         {
             sceneChanger.ChangeScene("Main");
+        }
+
+        if (shieldCooldown > 0)
+        {
+            shieldCooldown -= Time.deltaTime;
+        }
+        else if (shieldCooldown <= 0 && playerShield > 0)
+        {
+            playerShield -= (shieldDecrease * Player.Instance.defense / shieldDecreasedRealizedMultiplier);
+            shieldCooldown = initialShieldCooldown;
+            shieldBar.fillAmount = playerShield / maxShield;
+           
+            if (shieldDecreaseAcceleration <= 0)
+            {
+                shieldDecreaseAcceleration = 1;
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
+            }
+            else if (shieldDecreaseAcceleration > shieldDecreaseAccelerationClamp)
+            {
+                shieldDecreaseAcceleration = shieldDecreaseAccelerationClamp;
+            }
+            else if (shieldDecreaseAcceleration <= shieldDecreaseAccelerationClamp)
+            {
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier / shieldDecreaseAcceleration;
+                shieldDecreaseAcceleration++;
+            }
+           
+            if (playerShield <= 0)
+            {
+                shieldBar.fillAmount = playerShield / maxShield;
+                shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
+                shieldIcon.color = new Color(0, 0, 0, 0);
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
+            }
         }
 
         healthBar.fillAmount = player.hp / player.maxHP;
@@ -177,6 +235,7 @@ public class BossBattleManager : MonoBehaviour
             enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
         }
     }
+
     public void playerDefend()
     {
         if (player != null && enemy != null)
@@ -187,16 +246,12 @@ public class BossBattleManager : MonoBehaviour
                 playerShield = maxShield;
             }
             shieldBar.fillAmount = playerShield / maxShield;
-            shieldBar.color += new Color(0, 0, 0, 0.82f);
+            shieldBar.color = new Color(1, 1, 1, 0.82f);
             shieldIcon.color = Color.white;
+            shieldDecreaseAcceleration = 0;
         }
     }
-    public void playerRun()
-    {
-        gameData.subWindowText = "ran away...";
-        sceneChanger.ChangeScene("Main");
-    }
-
+    
     private Enemy CreateBoss(int zoneIndex)
     {
         Enemy enemyBlueprint = gameData.bossList[zoneIndex];
@@ -209,23 +264,32 @@ public class BossBattleManager : MonoBehaviour
         return enemyCopy;
     }
 
-    private void playerTakeDamage()
+    private void PlayerTakeDamage()
     {
         float trueDamage = enemy.damage + (enemy.damageModifier * (player.level - 1) / 2);
         if (playerShield > trueDamage)
         {
             playerShield -= trueDamage;
             //play a sound? show a shield graphic?
+            int shieldHitSound = Mathf.CeilToInt(Random.Range(0, sFXManager.shieldHitClips.Length));
+            audioSource.clip = sFXManager.shieldHitClips[shieldHitSound];
+            audioSource.PlayOneShot(audioSource.clip);
             shieldBar.fillAmount = playerShield / maxShield;
-            // decrease shield bar
+            vFXManager.ShieldDown();
+            battleText.text = $"You blocked {Mathf.Ceil(trueDamage)} damage with your shield";
+
+
         }
 
-        else if (playerShield > 0 && playerShield  <= trueDamage)
+        else if (playerShield > 0 && playerShield <= trueDamage)
         {
             float newDamage = (trueDamage - playerShield) / 2;
             player.hp -= newDamage;
             playerShield = 0;
             //play a shield break sound? / graphic?
+            audioSource.clip = sFXManager.shieldShatterClip[0];
+            audioSource.PlayOneShot(audioSource.clip);
+            battleText.text = $"Your shield broke and you took {Mathf.Ceil(newDamage)} damage from {enemy.enemyName}";
             shieldBar.fillAmount = playerShield / maxShield;
             shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
             shieldIcon.color = new Color(0, 0, 0, 0);
@@ -239,8 +303,10 @@ public class BossBattleManager : MonoBehaviour
 
             screenFlash.transform.localScale = new Vector3(850, 850, 850);
             StartCoroutine(screenShake.Shake(screenShakeDuration, screenShakeMagnitude, screenShakeDuration));
-
+            audioSource.clip = sFXManager.unshieldedHitClips[0];
+            audioSource.PlayOneShot(audioSource.clip);
             healthTMP.text = Mathf.Floor(player.hp).ToString();
+            //vFXManager.HealthDown();
             battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.enemyName}";
             healthBar.fillAmount = player.hp / player.maxHP;
         }
@@ -248,9 +314,6 @@ public class BossBattleManager : MonoBehaviour
 
     public void EnemyDead()
     {
-        int oldExp = Player.Instance.experience;
-        int expDifferential = Player.Instance.expNextLevel - oldExp;
-        Player.Instance.experience += expDifferential;
         Destroy(enemy); enemy = null;
         for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
         {

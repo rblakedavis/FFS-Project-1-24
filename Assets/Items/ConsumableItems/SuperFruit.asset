@@ -22,7 +22,7 @@ MonoBehaviour:
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 999999
   addsToPlayerHealthRegen: 0
-  cost: 300
+  cost: 100
   description: Fully restores health and magic
   minLevelAvailable: 3
   minZoneAvailable: 0

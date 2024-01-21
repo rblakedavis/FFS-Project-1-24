@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: ArcaneFocus
+  m_Name: Stone Shield
   m_EditorClassIdentifier: 
-  itemName: Arcane Focus
+  itemName: Stone Shield
   typeOfItem: Weapon
-  addsToPlayerAttack: 0.5
-  addsToPlayerDefense: 0
-  addsToPlayerMaxMagic: 1
+  addsToPlayerAttack: 0.8
+  addsToPlayerDefense: 0.1
+  addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
-  addsToPlayerMagicRegen: 0.01
+  addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
-  addsToPlayerHealthRegen: 0.01
-  cost: 350
-  description: "A powerful trinket.\n\n Adds 0.5 to Atk\n Adds 1% to regen\n Adds
-    1 to Magic"
-  minLevelAvailable: 4
-  minZoneAvailable: 0
+  addsToPlayerHealthRegen: 0
+  cost: 400
+  description: "You could hit someone with it if you were desperate..\n\n Adds 0.8
+    to Atk\n Adds 10 to Def"
+  minLevelAvailable: 6
+  minZoneAvailable: 1

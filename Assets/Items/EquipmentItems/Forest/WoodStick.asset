@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Wood Stick
   typeOfItem: Weapon
-  addsToPlayerAttack: 1
+  addsToPlayerAttack: 0.5
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
@@ -23,6 +23,6 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   cost: 100
-  description: "A surprisingly sharp stick.\n\n Adds 1 to atk"
+  description: "A surprisingly sharp stick.\n\n Adds 0.5 to atk"
   minLevelAvailable: 0
   minZoneAvailable: 0

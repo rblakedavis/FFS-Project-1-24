@@ -265,7 +265,7 @@ MonoBehaviour:
   zoneNames:
   - Forest
   - Cave
-  - Labyrinth
+  - Ruins
   - Depths
   - Underworld
   zoneNumEnemies: 1

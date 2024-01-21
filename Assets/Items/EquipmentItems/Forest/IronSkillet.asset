@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Iron Skillet
   typeOfItem: Weapon
-  addsToPlayerAttack: 1
+  addsToPlayerAttack: 0.5
   addsToPlayerDefense: 0.02
   addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   cost: 150
-  description: "So heavy.. like a shield with a handle.\n Adds 1 to atk\n Adds 1
-    to def\n"
+  description: "So heavy.. like a shield with a handle.\n Adds 0.5 to atk\n Adds
+    2 to def\n"
   minLevelAvailable: 2
   minZoneAvailable: 0

@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Shambler
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
-  expWorth: 60
-  secondsBetweenAttacks: 1
+  damage: 13.5
+  damageModifier: 0.6
+  maxHealth: 1200
+  curHealth: 1200
+  healthModifier: 30
+  expWorth: 30
+  secondsBetweenAttacks: 1.8

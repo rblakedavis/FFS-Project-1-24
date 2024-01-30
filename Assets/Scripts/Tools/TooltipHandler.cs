@@ -29,7 +29,7 @@ public class TooltipHandler : MonoBehaviour
         bossTooltip2 = "No running from bosses";
         grindTooltip = $"exp: {Player.Instance.experience} \n level up at {Player.Instance.expNextLevel}";
         lootTooltip = "Loot to gain gold";
-        shopTooltip = $"Gold: {GameData.Instance.goldCur} \n\n Gain levels = unlock more items." ;
+        shopTooltip = $"Gold: {GameData.Instance.goldCur} \n\n Gain levels to unlock more items." ;
     }
 
 public void OnMouseEnter()

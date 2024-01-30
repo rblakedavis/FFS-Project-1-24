@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public float magic;
     public float maxMagic;
     public float magicRegen;
+    public float magicPower;
+    public float magicPowerModifier;
 
     public float attack;
     public float defense;
@@ -44,6 +46,12 @@ public class Player : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    private void Update()
+    {
+        magicPower = attack + ( magic * magic/10 * magicPowerModifier );
+
     }
 
     private void Awake()

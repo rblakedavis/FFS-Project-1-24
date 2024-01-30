@@ -18,12 +18,13 @@ MonoBehaviour:
   addsToPlayerDefense: 0.05
   addsToPlayerMaxMagic: 1
   restoresPlayerMagic: 0
-  addsToPlayerMagicRegen: 0.01
+  addsToPlayerMagicRegen: 0.05
   addsToPlayerMaxHealth: 1
-  restoresPlayerHealth: 0
+  restoresPlayerHealth: 1
   addsToPlayerHealthRegen: 0.01
+  addsToPlayerMagicPowerModifier: 1
   cost: 450
   description: "A very plain charm. Slightly increases many of your stats.\n\n Adds
-    0.5 to Atk\n Adds 5 to Def\n Adds 1 to MaxHP\n Adds 1% to Regen\n"
+    5% to MP Regen\n Adds 2 to MaxHP\n Adds 1 to Magic Power"
   minLevelAvailable: 8
   minZoneAvailable: 1

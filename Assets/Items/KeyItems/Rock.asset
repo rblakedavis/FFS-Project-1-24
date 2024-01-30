@@ -22,7 +22,8 @@ MonoBehaviour:
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
-  cost: 850
+  addsToPlayerMagicPowerModifier: 0
+  cost: 1050
   description: Appears to be just a rock. But looks can be deceiving.
   minLevelAvailable: 10
   minZoneAvailable: 1

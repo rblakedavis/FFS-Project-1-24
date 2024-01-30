@@ -17,12 +17,13 @@ MonoBehaviour:
   addsToPlayerAttack: 0
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
-  restoresPlayerMagic: 999999
+  restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 999999
   addsToPlayerHealthRegen: 0
-  cost: 100
-  description: Fully restores health and magic
-  minLevelAvailable: 3
+  addsToPlayerMagicPowerModifier: 0
+  cost: 150
+  description: Fully restores health
+  minLevelAvailable: 0
   minZoneAvailable: 0

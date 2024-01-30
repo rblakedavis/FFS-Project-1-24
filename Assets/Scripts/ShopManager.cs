@@ -35,8 +35,7 @@ public class ShopManager : MonoBehaviour
             {
                 // Check if the item is consumable and player's health or magic is not full
                 if (item.typeOfItem == "Consumable" &&
-                    (Player.Instance.hp < Player.Instance.maxHP||
-                     Player.Instance.magic < Player.Instance.maxMagic))
+                    (Player.Instance.hp < Player.Instance.maxHP))
                 {
                     GameObject button = Instantiate(buttonPrefab, content);
                     TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();

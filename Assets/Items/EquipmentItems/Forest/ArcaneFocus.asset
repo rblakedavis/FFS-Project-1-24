@@ -16,14 +16,15 @@ MonoBehaviour:
   typeOfItem: Weapon
   addsToPlayerAttack: 0.5
   addsToPlayerDefense: 0
-  addsToPlayerMaxMagic: 1
+  addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0.01
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0.01
+  addsToPlayerMagicPowerModifier: 1
   cost: 350
-  description: "A powerful trinket.\n\n Adds 0.5 to Atk\n Adds 1% to regen\n Adds
-    1 to Magic"
+  description: "A powerful trinket.\n\n Adds 0.5 to Atk\n Adds 1% to Regen\n Adds
+    1 to Magic Power"
   minLevelAvailable: 4
   minZoneAvailable: 0

@@ -22,4 +22,4 @@ MonoBehaviour:
   curHealth: 15
   healthModifier: 5
   expWorth: 2
-  secondsBetweenAttacks: 0.8
+  secondsBetweenAttacks: 1

@@ -6,13 +6,18 @@ using UnityEngine.Events;
 
 public class BossBattleManager : MonoBehaviour
 {
+
     [SerializeField] private Item blobbyKeyItem;
+    
+    [SerializeField] private Item caveTrollKeyItem;
+
+    [SerializeField] private ParticleSystem shieldParticle;
 
     public Enemy enemy;
     private bool isEnemyDead = false;
     private bool playerHasChangedZones = false;
 
-    [SerializeField]private float bossDeadDelay;
+    [SerializeField] private float bossDeadDelay;
     private float bossDeadElapsed = 0f;
 
     private Player player;
@@ -63,6 +68,12 @@ public class BossBattleManager : MonoBehaviour
     [SerializeField] AudioSource audioSource;
 
     [SerializeField] VFXManager vFXManager;
+    [SerializeField] private GameObject magicAttack;
+    private bool isMagicAttackInitialized = false;
+    private float magicAttackCountdown;
+    private bool isMagicAttackActive = false;
+
+    private GameObject magicAttackCopy;
 
     private void Awake()
     {
@@ -78,18 +89,12 @@ public class BossBattleManager : MonoBehaviour
 
 
         //setup player shield, health, magic
-        maxShield = ((player.hp / 2) + (player.level / 2));
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
-        healthBar.fillAmount = player.hp / player.maxHP;
-        magicTMP.text = Mathf.Floor(player.magic).ToString();
-        magicBar.fillAmount = player.magic / player.maxMagic;
+
 
         //setup Screen effects
         screenShake = Camera.main.GetComponent<ScreenShake>();
-        if (screenShake == null)
-        {
-            Debug.Log("ScreenShake script not found");
-        }
+        playerHasChangedZones = false;
+
 
 
         //GameManager.Instance.onLevelUp.AddListener(OnLevelUp);
@@ -102,9 +107,12 @@ public class BossBattleManager : MonoBehaviour
                 {
                     enemy.damage = enemy.damage / 20;
                 }
-                    break;
+                break;
             case "Cave Troll":
-                //ifplayerhassecretitem....
+                if (Player.Instance.HasItem(caveTrollKeyItem))
+                {
+                    enemy.damage = enemy.damage / 20;
+                }
                 break;
 
             case "Minotaur":
@@ -120,15 +128,15 @@ public class BossBattleManager : MonoBehaviour
 
                 Debug.LogError("Boss not found in list!");
                 break;
-            // Pseudocode: 
-            // case caveboss: 
-            // check for caveboss key item
-            // etc... 
-            
+                // Pseudocode: 
+                // case caveboss: 
+                // check for caveboss key item
+                // etc... 
+
         }
         if (enemy != null)
         {
-           enemyCooldown = enemy.secondsBetweenAttacks / 1f;
+            enemyCooldown = enemy.secondsBetweenAttacks / 1f;
         }
     }
 
@@ -142,89 +150,14 @@ public class BossBattleManager : MonoBehaviour
 
     private void Update()
     {
-        if (enemy != null)
-        {
-            if (enemy.curHealth <= 0)
-            {
-                enemyCooldown = 2.5f;
-                EnemyDead();
-            }
-            else if (enemyCooldown > 0)
-            {
-                enemyCooldown -= Time.deltaTime;
-            }
-            else if (enemyCooldown <= 0)
-            {
-                enemyCooldown = enemy.secondsBetweenAttacks / 1f;
-                PlayerTakeDamage();
-            }
+        HandleEnemyAttacks();
 
-        }
+        HandleBossDeath();
         
-        textCooldown = enemyCooldown;
+        UpdateHUD();
+
+        HandleMagicAttacks();
         
-        if (textCooldown <= 0.5f)
-        {
-            battleText.text = string.Empty;
-        }
-
-        if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
-        {
-            bossDeadElapsed += Time.deltaTime;
-        }
-
-        if (bossDeadElapsed >= bossDeadDelay/2 && !playerHasChangedZones)
-        {
-            battleText.text = $"Left {gameData.zoneNames[gameData.curZoneIndex]}\n";
-            gameData.curZoneIndex++;
-            //if curZoneIndex >= 4{}....
-            battleText.text += $"Moving to {gameData.zoneNames[gameData.curZoneIndex]}";
-            playerHasChangedZones = true;
-        }
-
-        if (bossDeadElapsed >= bossDeadDelay)
-        {
-            sceneChanger.ChangeScene("Main");
-        }
-
-        if (shieldCooldown > 0)
-        {
-            shieldCooldown -= Time.deltaTime;
-        }
-        else if (shieldCooldown <= 0 && playerShield > 0)
-        {
-            playerShield -= (shieldDecrease * Player.Instance.defense / shieldDecreasedRealizedMultiplier);
-            shieldCooldown = initialShieldCooldown;
-            shieldBar.fillAmount = playerShield / maxShield;
-           
-            if (shieldDecreaseAcceleration <= 0)
-            {
-                shieldDecreaseAcceleration = 1;
-                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
-            }
-            else if (shieldDecreaseAcceleration > shieldDecreaseAccelerationClamp)
-            {
-                shieldDecreaseAcceleration = shieldDecreaseAccelerationClamp;
-            }
-            else if (shieldDecreaseAcceleration <= shieldDecreaseAccelerationClamp)
-            {
-                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier / shieldDecreaseAcceleration;
-                shieldDecreaseAcceleration++;
-            }
-           
-            if (playerShield <= 0)
-            {
-                shieldBar.fillAmount = playerShield / maxShield;
-                shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
-                shieldIcon.color = new Color(0, 0, 0, 0);
-                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
-            }
-        }
-
-        healthBar.fillAmount = player.hp / player.maxHP;
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
-        magicBar.fillAmount = player.magic / player.maxMagic;
-        magicTMP.text = Mathf.Floor(player.magic).ToString();
     }
 
     public void playerAttack()
@@ -232,7 +165,6 @@ public class BossBattleManager : MonoBehaviour
         if (enemy != null && enemy.damage > 0)
         {
             enemy.curHealth -= player.attack;
-            enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
         }
     }
 
@@ -251,7 +183,7 @@ public class BossBattleManager : MonoBehaviour
             shieldDecreaseAcceleration = 0;
         }
     }
-    
+
     private Enemy CreateBoss(int zoneIndex)
     {
         Enemy enemyBlueprint = gameData.bossList[zoneIndex];
@@ -259,7 +191,7 @@ public class BossBattleManager : MonoBehaviour
         string originalName = enemyCopy.name;
         enemyCopy.name = originalName.Replace("(Clone)", "");
 
-        animator.SetInteger("BossIndex", zoneIndex); 
+        animator.SetInteger("BossIndex", zoneIndex);
 
         return enemyCopy;
     }
@@ -289,6 +221,7 @@ public class BossBattleManager : MonoBehaviour
             //play a shield break sound? / graphic?
             audioSource.clip = sFXManager.shieldShatterClip[0];
             audioSource.PlayOneShot(audioSource.clip);
+            shieldParticle.Play();
             battleText.text = $"Your shield broke and you took {Mathf.Ceil(newDamage)} damage from {enemy.enemyName}";
             shieldBar.fillAmount = playerShield / maxShield;
             shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
@@ -314,6 +247,8 @@ public class BossBattleManager : MonoBehaviour
 
     public void EnemyDead()
     {
+        audioSource.clip = sFXManager.enemyDownClips[0];
+        audioSource.PlayOneShot(audioSource.clip);
         Destroy(enemy); enemy = null;
         for (int i = 0; i < showAndHideEnemyHealth.Length; i++)
         {
@@ -325,24 +260,164 @@ public class BossBattleManager : MonoBehaviour
         isEnemyDead = true;
 
     }
-    
 
-    /*
-    public void OnLevelUp()
+
+    private void HandleEnemyAttacks()
     {
-        enemyCooldown = 5f;
-        battleText.text = $"Level up! You are now level {Player.Instance.level}! " +
-                $"hp and magic restored. " +
-                $"attack and defense up! " +
-                $"Enemies will also be stronger...";
-        player.hp = player.maxHP;
-        player.magic = player.maxMagic;
-        healthBar.fillAmount = player.hp / player.maxHP;
-        healthTMP.text = Mathf.Floor(player.hp).ToString();
+        if (enemy != null)
+        {
+            if (enemy.curHealth <= 0)
+            {
+                enemyCooldown = 2.5f;
+                EnemyDead();
+            }
+            else if (enemyCooldown > 0)
+            {
+                enemyCooldown -= Time.deltaTime;
+            }
+            else if (enemyCooldown <= 0)
+            {
+                enemyCooldown = enemy.secondsBetweenAttacks / 1f;
+                PlayerTakeDamage();
+            }
 
+        }
 
-        return;
+        textCooldown = enemyCooldown;
+
+        if (textCooldown <= 0.5f)
+        {
+            battleText.text = string.Empty;
+        }
+
     }
-    */
 
+    private void HandleBossDeath()
+    {
+        if (isEnemyDead && bossDeadElapsed < bossDeadDelay)
+        {
+            bossDeadElapsed += Time.deltaTime;
+        }
+
+        if (bossDeadElapsed >= bossDeadDelay / 2 && !playerHasChangedZones && gameData.curZoneIndex < 4)
+        {
+            battleText.text = $"Left {gameData.zoneNames[gameData.curZoneIndex]}\n";
+            gameData.curZoneIndex++;
+            battleText.text += $"Moving to {gameData.zoneNames[gameData.curZoneIndex]}";
+            Player.Instance.hp = Player.Instance.maxHP;
+            playerHasChangedZones = true;
+        }
+        else if (bossDeadElapsed >= bossDeadDelay / 2 && !playerHasChangedZones && gameData.curZoneIndex >= 4)
+        {
+            sceneChanger.ChangeScene("GameEnd");
+        }
+
+        if (bossDeadElapsed >= bossDeadDelay)
+        {
+            sceneChanger.ChangeScene("Main");
+        }
+
+    }
+
+    private void UpdateShield()
+    {
+        if (shieldCooldown > 0)
+        {
+            shieldCooldown -= Time.deltaTime;
+        }
+        else if (shieldCooldown <= 0 && playerShield > 0)
+        {
+            playerShield -= (shieldDecrease * Player.Instance.defense / shieldDecreasedRealizedMultiplier);
+            shieldCooldown = initialShieldCooldown;
+            shieldBar.fillAmount = playerShield / maxShield;
+
+            if (shieldDecreaseAcceleration <= 0)
+            {
+                shieldDecreaseAcceleration = 1;
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
+            }
+            else if (shieldDecreaseAcceleration > shieldDecreaseAccelerationClamp)
+            {
+                shieldDecreaseAcceleration = shieldDecreaseAccelerationClamp;
+            }
+            else if (shieldDecreaseAcceleration <= shieldDecreaseAccelerationClamp)
+            {
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier / shieldDecreaseAcceleration;
+                shieldDecreaseAcceleration++;
+            }
+
+            if (playerShield <= 0)
+            {
+                shieldBar.fillAmount = playerShield / maxShield;
+                shieldBar.color = new Color(shieldBar.color.r, shieldBar.color.g, shieldBar.color.b, 0);
+                shieldIcon.color = new Color(0, 0, 0, 0);
+                shieldDecreasedRealizedMultiplier = shieldDecreaseDefenseMultiplier;
+            }
+        }
+
+    }
+
+    private void UpdateHUD()
+    {
+        UpdateShield();
+        maxShield = ((player.hp / 2) + (player.level / 2));
+        healthTMP.text = Mathf.Floor(player.hp).ToString();
+        healthBar.fillAmount = player.hp / player.maxHP;
+        magicTMP.text = Mathf.Floor(player.magic).ToString();
+        magicBar.fillAmount = player.magic / player.maxMagic;
+        if (enemy != null)
+        {
+            enemyHealthBar.fillAmount = enemy.curHealth / enemy.maxHealth;
+        }
+    }
+
+    private void HandleMagicAttacks()
+    {
+        if (Player.Instance.magic >= 1)
+        {
+            if (!isMagicAttackInitialized && !isMagicAttackActive)
+            {
+                magicAttackCountdown = 1f;
+                isMagicAttackInitialized = true;
+            }
+            else if (isMagicAttackInitialized)
+            {
+                magicAttackCountdown -= Time.deltaTime;
+                if (magicAttackCountdown <= 0)
+                {
+                    magicAttackCountdown = float.PositiveInfinity;
+                    SpawnMagicAttack();
+                }
+            }
+        }
+    }
+
+    private void SpawnMagicAttack()
+    {
+        if (!isMagicAttackActive)
+        {
+            float randomX = Random.Range(-70f, 70f);
+            float randomY = Random.Range(-50f, 50f);
+            GameObject magicAttackInstance = Instantiate(magicAttack, new Vector3(randomX, randomY, 0), Quaternion.identity);
+            magicAttackInstance.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
+            Rigidbody2D magicAttackRb = magicAttackInstance.GetComponent<Rigidbody2D>();
+            float velocityX = Random.Range(Random.Range(90f, 140f), Random.Range(-90f, -140f));
+            float velocityY = Random.Range(85f, 125f);
+            magicAttackRb.velocity = new Vector2(velocityX, velocityY);
+            magicAttackCopy = magicAttackInstance;
+
+            AudioClip clip = sFXManager.magicSpawnedSounds[0];
+            audioSource.PlayOneShot(clip);
+
+            isMagicAttackActive = true;
+        }
+    }
+
+    public void DespawnMagicAttack()
+    {
+        magicAttackCopy = null;
+        isMagicAttackActive = false;
+        isMagicAttackInitialized = false;
+    }
 }

@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Jelly
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
-  expWorth: 90
-  secondsBetweenAttacks: 1
+  damage: 9
+  damageModifier: 0.6
+  maxHealth: 100
+  curHealth: 100
+  healthModifier: 65
+  expWorth: 30
+  secondsBetweenAttacks: 1.6

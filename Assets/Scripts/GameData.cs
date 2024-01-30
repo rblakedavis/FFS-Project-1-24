@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour
 {
-
+    public float extraTime = 0f;
 
     //public string curZoneName;
     public int curZoneIndex = 0;

@@ -22,8 +22,9 @@ MonoBehaviour:
   addsToPlayerMaxHealth: 1
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0.01
+  addsToPlayerMagicPowerModifier: 0
   cost: 300
   description: "A pretty charm. Slightly raises many of your stats.\n Adds 5 to def\n
-    Adds 1 to HP and MP\n Adds 1% to regen"
+    Adds 1 to MaxHP and MaxMP\n Adds 1% to regen"
   minLevelAvailable: 3
   minZoneAvailable: 0

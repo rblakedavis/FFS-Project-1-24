@@ -17,6 +17,7 @@ public class Item : ScriptableObject
     public float addsToPlayerMaxHealth;
     public float restoresPlayerHealth;
     public float addsToPlayerHealthRegen;
+    public float addsToPlayerMagicPowerModifier;
     public int cost;
     [TextArea(3, 5)] public string description;
 
@@ -40,6 +41,7 @@ public class Item : ScriptableObject
                 Player.Instance.magicRegen += addsToPlayerMagicRegen;
                 Player.Instance.maxHP += addsToPlayerMaxHealth;
                 Player.Instance.hpRegen += addsToPlayerHealthRegen;
+                Player.Instance.magicPowerModifier += addsToPlayerMagicPowerModifier;
                 Destroy(button);
             }
             else

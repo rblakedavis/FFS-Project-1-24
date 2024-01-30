@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Risen Rat
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
-  expWorth: 30
-  secondsBetweenAttacks: 1
+  damage: 6
+  damageModifier: 0.15
+  maxHealth: 175
+  curHealth: 175
+  healthModifier: 30
+  expWorth: 14
+  secondsBetweenAttacks: 1.2

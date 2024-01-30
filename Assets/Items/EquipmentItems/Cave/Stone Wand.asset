@@ -18,12 +18,14 @@ MonoBehaviour:
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 1
   restoresPlayerMagic: 0
-  addsToPlayerMagicRegen: 0
+  addsToPlayerMagicRegen: 0.01
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0.01
+  addsToPlayerMagicPowerModifier: 1
   cost: 500
   description: "Cave dwellers once wielded powerful magic. Channeled through a wand
-    such as this.\n\n Adds 0.8 to Atk\n Adds 1% to regen\n Adds 1 to Magic "
+    such as this.\n\n Adds 0.8 to Atk\n Adds 1% to regen\n Adds 1 to MaxMP\n Adds
+    1 to Magic Power"
   minLevelAvailable: 9
   minZoneAvailable: 1

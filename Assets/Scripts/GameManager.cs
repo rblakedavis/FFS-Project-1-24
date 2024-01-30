@@ -3,14 +3,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine.Events;
 
 
 public class GameManager : MonoBehaviour
 {
-
+    public TextMeshProUGUI timer;
+    public string gameTime;
+    public float totalTimeInSeconds;
 
     [SerializeField] private TextMeshProUGUI zone;
     [SerializeField] private TextMeshProUGUI level;
@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
             level.text = Player.Instance.level.ToString();
             magic.text = Mathf.Floor(Player.Instance.magic).ToString();
             health.text = Mathf.Floor(Player.Instance.hp).ToString();
+            
 
             isInitialized = true;           
         }
@@ -190,6 +191,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(WaitForLoad());
             if (Player.Instance.hp > 0) return;
             SceneManager.LoadScene("GameOver");
+            GameData.Instance.extraTime += 30f;
         }
 
         if (Player.Instance.experience >= Player.Instance.expNextLevel)
@@ -234,6 +236,17 @@ public class GameManager : MonoBehaviour
         {
             Player.Instance.magic = Player.Instance.maxMagic;
         }
+
+        if (SceneManager.GetActiveScene().name != "DemoEnd")
+        {
+            totalTimeInSeconds = Time.time + GameData.Instance.extraTime;
+        }
+
+        string formattedTime = FormatTime(totalTimeInSeconds);
+
+        gameTime = formattedTime;
+        timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
+        timer.text = formattedTime;
     }
 
         private IEnumerator WaitForLoad() 
@@ -264,5 +277,23 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
+    string FormatTime(float timeInSeconds)
+    {
+        int hours = Mathf.FloorToInt(timeInSeconds / 3600);
+        int minutes = Mathf.FloorToInt((timeInSeconds % 3600) / 60);
+        int seconds = Mathf.FloorToInt(timeInSeconds % 60);
+        int milliseconds = Mathf.FloorToInt((timeInSeconds - Mathf.Floor(timeInSeconds)) * 100); // Extract milliseconds with 2 digits
+
+        if (hours > 0)
+        {
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+        }
+        else
+        {
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", minutes, seconds, milliseconds);
+        }
+    }
+
 
 }

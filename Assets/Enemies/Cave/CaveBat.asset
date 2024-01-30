@@ -21,5 +21,5 @@ MonoBehaviour:
   maxHealth: 50
   curHealth: 50
   healthModifier: 5
-  expWorth: 4
+  expWorth: 5
   secondsBetweenAttacks: 1

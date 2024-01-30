@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Lurker
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
-  expWorth: 79
-  secondsBetweenAttacks: 1
+  damage: 8
+  damageModifier: 0.7
+  maxHealth: 600
+  curHealth: 600
+  healthModifier: 45
+  expWorth: 30
+  secondsBetweenAttacks: 1.4

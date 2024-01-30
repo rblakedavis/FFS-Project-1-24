@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Risen Soldier
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
-  expWorth: 25
-  secondsBetweenAttacks: 1
+  damage: 7
+  damageModifier: 0.2
+  maxHealth: 180
+  curHealth: 180
+  healthModifier: 22
+  expWorth: 12
+  secondsBetweenAttacks: 1.2

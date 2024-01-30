@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
+  m_Name: Stone Wand
+  m_EditorClassIdentifier: 
+  itemName: Glass Wand
+  typeOfItem: Weapon
+  addsToPlayerAttack: 0
+  addsToPlayerDefense: 0
+  addsToPlayerMaxMagic: 2
+  restoresPlayerMagic: 2
+  addsToPlayerMagicRegen: 0.01
+  addsToPlayerMaxHealth: 0
+  restoresPlayerHealth: 0
+  addsToPlayerHealthRegen: 0.01
+  addsToPlayerMagicPowerModifier: 2
+  cost: 1800
+  description: "A mystery how this glass wand is so well preserved.\n\n Adds 2 to
+    Magic Power\n Adds 1% to Regen\n Adds 2 to MaxMP"
+  minLevelAvailable: 14
+  minZoneAvailable: 2

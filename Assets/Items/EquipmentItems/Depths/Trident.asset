@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
+  m_Name: Trident
+  m_EditorClassIdentifier: 
+  itemName: Trident
+  typeOfItem: Weapon
+  addsToPlayerAttack: 10
+  addsToPlayerDefense: 0
+  addsToPlayerMaxMagic: 0
+  restoresPlayerMagic: 0
+  addsToPlayerMagicRegen: 0
+  addsToPlayerMaxHealth: 0
+  restoresPlayerHealth: 0
+  addsToPlayerHealthRegen: 0.4
+  addsToPlayerMagicPowerModifier: 0
+  cost: 1600
+  description: "Neither a harpoon nor a spear. Imbued with the healing magic of water.\n
+    Adds 10 to Attack\n Adds 0.4 to HP Regen"
+  minLevelAvailable: 15
+  minZoneAvailable: 3

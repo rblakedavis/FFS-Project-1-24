@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
+  m_Name: Pearl
+  m_EditorClassIdentifier: 
+  itemName: Pearl
+  typeOfItem: Charm
+  addsToPlayerAttack: 0
+  addsToPlayerDefense: 0
+  addsToPlayerMaxMagic: 0
+  restoresPlayerMagic: 0
+  addsToPlayerMagicRegen: 0.5
+  addsToPlayerMaxHealth: 0
+  restoresPlayerHealth: 0
+  addsToPlayerHealthRegen: 0
+  addsToPlayerMagicPowerModifier: 2
+  cost: 1800
+  description: "An enchanted pearl that fuels your magic attacks.\n\n Adds 2 to Magic
+    Power\n Adds 0.5 to MP Regen"
+  minLevelAvailable: 16
+  minZoneAvailable: 3

@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Lava Face
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
+  damage: 5
+  damageModifier: 1.8
+  maxHealth: 100
+  curHealth: 100
+  healthModifier: 400
   expWorth: 160
-  secondsBetweenAttacks: 1
+  secondsBetweenAttacks: 1.5

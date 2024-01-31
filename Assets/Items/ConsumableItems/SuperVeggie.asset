@@ -17,10 +17,10 @@ MonoBehaviour:
   addsToPlayerAttack: 0
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
-  restoresPlayerMagic: 0
+  restoresPlayerMagic: 9999999
   addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
-  restoresPlayerHealth: 999999
+  restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
   cost: 1500

@@ -23,8 +23,8 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
-  cost: 0
+  cost: 2000
   description: "Once served as a natural armament for some creature. Now it can be
-    yours if the price is right.\n "
-  minLevelAvailable: 12
-  minZoneAvailable: 2
+    yours if the price is right.\n \n Adds 3 to Atk\n Adds 0.2 to Def "
+  minLevelAvailable: 17
+  minZoneAvailable: 3

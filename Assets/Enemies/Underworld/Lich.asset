@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Lich
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
+  damage: 8
+  damageModifier: 2
+  maxHealth: 1000
+  curHealth: 1000
+  healthModifier: 290
   expWorth: 200
-  secondsBetweenAttacks: 1
+  secondsBetweenAttacks: 1.5

@@ -8,8 +8,12 @@ public class BossBattleManager : MonoBehaviour
 {
 
     [SerializeField] private Item blobbyKeyItem;
-    
     [SerializeField] private Item caveTrollKeyItem;
+    [SerializeField] private Item minotaurKeyItem;
+    [SerializeField] private Item deepHorrorKeyItem;
+    [SerializeField] private Item gateKeeperKeyItem;
+
+    [SerializeField] private TextMeshProUGUI powerNumber;
 
     [SerializeField] private ParticleSystem shieldParticle;
 
@@ -116,22 +120,31 @@ public class BossBattleManager : MonoBehaviour
                 break;
 
             case "Minotaur":
+                if (Player.Instance.HasItem(minotaurKeyItem))
+                {
+                    enemy.damage = enemy.damage / 20;
+                }
                 break;
 
             case "Deep Horror":
+                if (Player.Instance.HasItem(deepHorrorKeyItem))
+                {
+                    enemy.damage = enemy.damage / 20;
+                }
                 break;
 
             case "Gatekeeper":
+                if (Player.Instance.HasItem(gateKeeperKeyItem))
+                {
+                    enemy.damage = enemy.damage / 20;
+                }
                 break;
 
             default:
 
                 Debug.LogError("Boss not found in list!");
                 break;
-                // Pseudocode: 
-                // case caveboss: 
-                // check for caveboss key item
-                // etc... 
+
 
         }
         if (enemy != null)
@@ -145,11 +158,13 @@ public class BossBattleManager : MonoBehaviour
         battleText.text = $"You foolishly challenge {enemy.enemyName}...";
         playerLevelHUD.text = player.level.ToString();
         playerExpToNextHUD.text = (player.expNextLevel - player.experience).ToString();
-        //call the battle method
+
     }
 
     private void Update()
     {
+        powerNumber.text = Player.Instance.magicPower.ToString();
+
         HandleEnemyAttacks();
 
         HandleBossDeath();
@@ -202,7 +217,6 @@ public class BossBattleManager : MonoBehaviour
         if (playerShield > trueDamage)
         {
             playerShield -= trueDamage;
-            //play a sound? show a shield graphic?
             int shieldHitSound = Mathf.CeilToInt(Random.Range(0, sFXManager.shieldHitClips.Length));
             audioSource.clip = sFXManager.shieldHitClips[shieldHitSound];
             audioSource.PlayOneShot(audioSource.clip);
@@ -218,7 +232,6 @@ public class BossBattleManager : MonoBehaviour
             float newDamage = (trueDamage - playerShield) / 2;
             player.hp -= newDamage;
             playerShield = 0;
-            //play a shield break sound? / graphic?
             audioSource.clip = sFXManager.shieldShatterClip[0];
             audioSource.PlayOneShot(audioSource.clip);
             shieldParticle.Play();
@@ -239,7 +252,6 @@ public class BossBattleManager : MonoBehaviour
             audioSource.clip = sFXManager.unshieldedHitClips[0];
             audioSource.PlayOneShot(audioSource.clip);
             healthTMP.text = Mathf.Floor(player.hp).ToString();
-            //vFXManager.HealthDown();
             battleText.text = $"You took {Mathf.Ceil(trueDamage)} damage from {enemy.enemyName}";
             healthBar.fillAmount = player.hp / player.maxHP;
         }

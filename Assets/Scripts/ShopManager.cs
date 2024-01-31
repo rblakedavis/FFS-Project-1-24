@@ -34,7 +34,7 @@ public class ShopManager : MonoBehaviour
                 GameData.Instance.curZoneIndex >= item.minZoneAvailable)
             {
                 // Check if the item is consumable and player's health or magic is not full
-                if (item.typeOfItem == "Consumable" &&
+                if (item.itemName == "Super Fruit" &&
                     (Player.Instance.hp < Player.Instance.maxHP))
                 {
                     GameObject button = Instantiate(buttonPrefab, content);
@@ -53,7 +53,44 @@ public class ShopManager : MonoBehaviour
                     button.GetComponent<Button>().onClick.AddListener(() => HandleButtonClick(item, button));
                     ShopTooltipHandler tooltipHandler = button.AddComponent<ShopTooltipHandler>();
                 }
-                else if (item.typeOfItem != "Consumable") // For non-consumable items
+                else if (item.itemName == "Super Veggie" &&
+                    (Player.Instance.magic < Player.Instance.maxMagic))
+                {
+                    GameObject button = Instantiate(buttonPrefab, content);
+                    TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+                    if (buttonText != null)
+                    {
+                        buttonText.text = item.itemName;
+                    }
+                    button.tag = "SubMenuObjects";
+
+                    GameObject itemObject = new GameObject(item.itemName);
+                    itemObject.transform.SetParent(button.transform);
+                    ItemContainer itemContainer = itemObject.AddComponent<ItemContainer>();
+                    itemContainer.item = item;
+
+                    button.GetComponent<Button>().onClick.AddListener(() => HandleButtonClick(item, button));
+                    ShopTooltipHandler tooltipHandler = button.AddComponent<ShopTooltipHandler>();
+                }
+                else if (item.typeOfItem != "Consumable" && item.typeOfItem != "EndGame") // For non-consumable items
+                {
+                    GameObject button = Instantiate(buttonPrefab, content);
+                    TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+                    if (buttonText != null)
+                    {
+                        buttonText.text = item.itemName;
+                    }
+                    button.tag = "SubMenuObjects";
+
+                    GameObject itemObject = new GameObject(item.itemName);
+                    itemObject.transform.SetParent(button.transform);
+                    ItemContainer itemContainer = itemObject.AddComponent<ItemContainer>();
+                    itemContainer.item = item;
+
+                    button.GetComponent<Button>().onClick.AddListener(() => HandleButtonClick(item, button));
+                    ShopTooltipHandler tooltipHandler = button.AddComponent<ShopTooltipHandler>();
+                }
+                else if (item.typeOfItem == "EndGame")
                 {
                     GameObject button = Instantiate(buttonPrefab, content);
                     TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
@@ -79,12 +116,15 @@ public class ShopManager : MonoBehaviour
     {
         if (!Player.Instance.HasItem(item))
         {
-            if(item.typeOfItem != "Consumable" && GameData.Instance.goldCur >= item.cost)
+            if (item.typeOfItem != "Consumable" && item.typeOfItem != "EndGame")
             {
-                item.itemPurchased(button);
-                Player.Instance.AttachItem(item);
+                if (GameData.Instance.goldCur >= item.cost)
+                {
+                    item.itemPurchased(button);
+                    Player.Instance.AttachItem(item);
+                }
             }
-            else if (item.typeOfItem == "Consumable" && GameData.Instance.goldCur >= item.cost)
+            else if(GameData.Instance.goldCur >= item.cost)
             {
                 item.itemPurchased(button);
             }

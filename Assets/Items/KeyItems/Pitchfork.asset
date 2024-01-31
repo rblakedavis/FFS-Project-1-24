@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: Bull Horn
+  m_Name: Pitchfork
   m_EditorClassIdentifier: 
-  itemName: Bull Horn
+  itemName: Pitchfork
   typeOfItem: Key
   addsToPlayerAttack: 0
   addsToPlayerDefense: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
-  cost: 2000
-  description: 'A piece of junk? Or a powerful treasure... '
-  minLevelAvailable: 15
-  minZoneAvailable: 2
+  cost: 6666
+  description: This. Is. The. End.
+  minLevelAvailable: 25
+  minZoneAvailable: 4

@@ -9,6 +9,8 @@ public class NewBattleManager : MonoBehaviour
 
     private Player player;
 
+    [SerializeField] private TextMeshProUGUI powerNumber;
+
 
     [SerializeField] private Image healthBar;
     [SerializeField] private TextMeshProUGUI healthTMP;
@@ -115,6 +117,8 @@ public class NewBattleManager : MonoBehaviour
 
     private void Update()
     {
+        powerNumber.text = Player.Instance.magicPower.ToString();
+
         HandleMagicAttacks();
 
         HandleEnemyAttacks();

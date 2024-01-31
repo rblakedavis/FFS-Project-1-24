@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: Bull Horn
+  m_Name: DefFruit
   m_EditorClassIdentifier: 
-  itemName: Bull Horn
-  typeOfItem: Key
+  itemName: Def Fruilt
+  typeOfItem: EndGame
   addsToPlayerAttack: 0
-  addsToPlayerDefense: 0
+  addsToPlayerDefense: 0.1
   addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0
@@ -23,7 +23,9 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
-  cost: 2000
-  description: 'A piece of junk? Or a powerful treasure... '
-  minLevelAvailable: 15
-  minZoneAvailable: 2
+  cost: 6000
+  description: 'Raises Def by 0.5.
+
+    Can be bought multiple times.'
+  minLevelAvailable: 25
+  minZoneAvailable: 4

@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviour
             Player.Instance.magic = Player.Instance.maxMagic;
         }
 
-        if (SceneManager.GetActiveScene().name != "DemoEnd")
+        if (SceneManager.GetActiveScene().name != "GameEnd")
         {
             totalTimeInSeconds = Time.time + GameData.Instance.extraTime;
         }

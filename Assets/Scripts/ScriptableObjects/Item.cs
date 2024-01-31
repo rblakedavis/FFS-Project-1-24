@@ -33,7 +33,7 @@ public class Item : ScriptableObject
         {
             GameData.Instance.goldCur -= cost;
 
-            if (typeOfItem != "Consumable")
+            if (typeOfItem != "Consumable" && typeOfItem != "EndGame")
             {
                 Player.Instance.attack += addsToPlayerAttack;
                 Player.Instance.defense += addsToPlayerDefense;
@@ -44,11 +44,21 @@ public class Item : ScriptableObject
                 Player.Instance.magicPowerModifier += addsToPlayerMagicPowerModifier;
                 Destroy(button);
             }
-            else
+            else if (typeOfItem == "Consumable")
             {
                 Player.Instance.hp += restoresPlayerHealth;
                 Player.Instance.magic += restoresPlayerMagic;
                 Destroy(button);
+            }
+            else if ((typeOfItem == "EndGame"))
+            {
+                Player.Instance.attack += addsToPlayerAttack;
+                Player.Instance.defense += addsToPlayerDefense;
+                Player.Instance.maxMagic += addsToPlayerMaxMagic;
+                Player.Instance.magicRegen += addsToPlayerMagicRegen;
+                Player.Instance.maxHP += addsToPlayerMaxHealth;
+                Player.Instance.hpRegen += addsToPlayerHealthRegen;
+                Player.Instance.magicPowerModifier += addsToPlayerMagicPowerModifier;
             }
         }
         else

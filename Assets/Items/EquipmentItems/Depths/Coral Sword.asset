@@ -14,17 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Coral Sword
   typeOfItem: Weapon
-  addsToPlayerAttack: 0
+  addsToPlayerAttack: 10
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
-  restoresPlayerHealth: 15
-  addsToPlayerHealthRegen: 0.5
+  restoresPlayerHealth: 0
+  addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
-  cost: 1200
-  description: "A potent charm said to boost vitality.\n\n Adds 5% to Hp Regen\n
-    Adds 15 to Max Hp"
+  cost: 2200
+  description: "Sharp and strong.\n\n Adds 10 to Atk"
   minLevelAvailable: 19
   minZoneAvailable: 3

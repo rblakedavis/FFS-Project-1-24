@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b78416cf47d4d540bb293bc3c8957e3, type: 3}
-  m_Name: Bull Horn
+  m_Name: Lava Sword
   m_EditorClassIdentifier: 
-  itemName: Bull Horn
-  typeOfItem: Key
-  addsToPlayerAttack: 0
+  itemName: Lava Sword
+  typeOfItem: Weapon
+  addsToPlayerAttack: 40
   addsToPlayerDefense: 0
   addsToPlayerMaxMagic: 0
   restoresPlayerMagic: 0
   addsToPlayerMagicRegen: 0
   addsToPlayerMaxHealth: 0
   restoresPlayerHealth: 0
-  addsToPlayerHealthRegen: 0
+  addsToPlayerHealthRegen: 0.4
   addsToPlayerMagicPowerModifier: 0
-  cost: 2000
-  description: 'A piece of junk? Or a powerful treasure... '
-  minLevelAvailable: 15
-  minZoneAvailable: 2
+  cost: 3200
+  description: "A lava sword.\n Adds 40 to Atk"
+  minLevelAvailable: 20
+  minZoneAvailable: 4

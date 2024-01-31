@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: -1
   sprite: {fileID: 0}
   enemyName: Wyrm
-  damage: 1
-  damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
+  damage: 4
+  damageModifier: 2.2
+  maxHealth: 3200
+  curHealth: 3200
+  healthModifier: 195
   expWorth: 240
-  secondsBetweenAttacks: 1
+  secondsBetweenAttacks: 1.5

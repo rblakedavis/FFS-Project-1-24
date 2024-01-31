@@ -16,9 +16,10 @@ MonoBehaviour:
   bossIndex: 3
   sprite: {fileID: 0}
   enemyName: Deep Horror
-  damage: 1
+  damage: 600
   damageModifier: 0
-  maxHealth: 1
-  curHealth: 1
+  maxHealth: 4500
+  curHealth: 4500
+  healthModifier: 0
   expWorth: 0
-  secondsBetweenAttacks: 1
+  secondsBetweenAttacks: 1.5

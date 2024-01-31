@@ -23,7 +23,7 @@ MonoBehaviour:
   restoresPlayerHealth: 0
   addsToPlayerHealthRegen: 0
   addsToPlayerMagicPowerModifier: 0
-  cost: 2500
+  cost: 3000
   description: 'A piece of junk? Or a powerful treasure... '
   minLevelAvailable: 20
   minZoneAvailable: 3

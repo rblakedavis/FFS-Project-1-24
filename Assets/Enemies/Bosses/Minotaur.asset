@@ -16,7 +16,7 @@ MonoBehaviour:
   bossIndex: 2
   sprite: {fileID: 0}
   enemyName: Minotaur
-  damage: 20
+  damage: 400
   damageModifier: 0
   maxHealth: 1400
   curHealth: 1400
